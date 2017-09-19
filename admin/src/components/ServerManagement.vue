@@ -40,12 +40,12 @@
             width="95">
           </el-table-column>
           <el-table-column
-            prop="adminName"
+            prop="openUser.name"
             label="管理员"
             width="95">
           </el-table-column>
           <el-table-column
-            prop="contact"
+            prop="openUser.mobile"
             label="联系方式"
             width="140">
           </el-table-column>
@@ -67,8 +67,9 @@
                 <el-button type="text" size="small">查看详情</el-button>
               </router-link>
               <el-button type="text" size="small"
-                 @click.native.prevent="toggleAccount(scope, tableData)">
-                {{tableData[scope.$index].state === '正常' ? '账号停用' : '账号启用'}}
+                 @click.native.prevent="toggleAccount(scope, tableData)"
+                 v-loading.fullscreen.lock="fullscreenLoading">
+                {{scope.row.status === 0 ? '账号停用' : '账号启用'}}
               </el-button>
             </template>
           </el-table-column>
@@ -92,6 +93,7 @@
     },
     data () {
       return {
+        fullscreenLoading: false,
         tableData: [],
         pageInfo: {
           // 记录当前页码
@@ -105,9 +107,13 @@
     methods: {
       // 初始化页面数据
       getProvider (page = 1, pageSize = 10) {
+        // 页面加载时的过渡效果显示
+        this.fullscreenLoading = true
         let _this = this
         let providerApi = 'api/provider/list?page=' + page + '&pageSize=' + pageSize
         _this.$http.get(providerApi).then((response) => {
+          // 页面加载时的过渡效果隐藏
+          this.fullscreenLoading = false
           response.data.data.list.forEach((item) => {
             // console.log(item)
             item.state = item.status === 1 ? '已停用' : '正常'
@@ -130,22 +136,29 @@
       toggleAccount (scope, rows) {
         // 可取到当前条目的信息
         let _this = this
+        let status = scope.row.status
+
+        // 提示语
+        let showText = status === 0 ? '账号停用后该服务商的所有账号都将被停用，确定要停用吗' : '确定要启用该服务商吗'
+        let tipsTextOk = status === 0 ? '账号已停用!' : '账号启用成功!'
+        let tipsTextCancel = status === 0 ? '已取消停用!' : '已取消启用'
+
+        // 要变成什么状态
+        let changeStatus = status === 0 ? 1 : 0
+
         // 启用、停用接口地址
-        let toggleAccountApi = 'api/provider/updateStatusById?id=' + scope.row.id + '&status=' + scope.row.status
-        let state = scope.row.status
-        let showText = state === '正常' ? '账号停用后该服务商的所有账号都将被停用，确定要停用吗' : '确定要启用该服务商吗'
-        let tipsTextOk = state === '正常' ? '账号已停用!' : '账号启用成功!'
-        let tipsTextCancel = state === '正常' ? '已取消停用!' : '已取消启用'
+        let toggleAccountApi = 'api/provider/updateStatusById?id=' + scope.row.id + '&status=' + changeStatus
         this.$confirm(showText, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+          // 页面加载时的过渡效果显示
+          this.fullscreenLoading = true
           // 调用停用、启用接口
-          _this.$http.post(toggleAccountApi, {
-            id: scope.row.id,
-            status: scope.row.status
-          }).then((response) => {
+          _this.$http.get(toggleAccountApi).then((response) => {
+            // 页面加载时的过渡效果隐藏
+            this.fullscreenLoading = false
             if (response.data.code === 0) {
               // 修改成功后，重新渲染页面。
               _this.getProvider(this.pageInfo.currentPage)
