@@ -40,7 +40,7 @@
             width="95">
           </el-table-column>
           <el-table-column
-            prop="admin"
+            prop="adminName"
             label="管理员"
             width="95">
           </el-table-column>
@@ -106,7 +106,16 @@
         let providerApi = 'api/provider/list?page=' + page + '&pageSize=' + pageSize
         _this.$http.get(providerApi).then((response) => {
           response.data.data.list.forEach((item) => {
+            // console.log(item)
+            item.state = item.status === 1 ? '已停用' : '正常'
             item.addTime = moment(item.createTime).format('YYYY-MM-DD')
+            if (item.openUser === null) {
+              item.adminName = ''
+              item.contact = ''
+            } else {
+              item.adminName = item.openUser.name
+              item.contact = item.openUser.mobile
+            }
           })
           _this.$set(_this.$data, 'tableData', response.data.data.list)
           _this.$set(_this.pageInfo, 'pages', response.data.data.pages)
@@ -117,11 +126,11 @@
       },
       toggleAccount (scope, rows) {
         // 可取到当前条目的信息
-        // let _this = this
+        let _this = this
         // 启用、停用接口地址
-        // let toggleAccountApi = 'api/provider/toggleAccount'
-        console.log(scope)
-        let state = scope.row.state
+        let toggleAccountApi = 'api/provider/updateStatusById?id=' + scope.row.id + '&status=' + scope.row.status
+        console.log(scope.row.status)
+        let state = scope.row.status
         let showText = state === '正常' ? '账号停用后该服务商的所有账号都将被停用，确定要停用吗' : '确定要启用该服务商吗'
         let tipsTextOk = state === '正常' ? '账号已停用!' : '账号启用成功!'
         let tipsTextCancel = state === '正常' ? '已取消停用!' : '已取消启用'
@@ -131,18 +140,16 @@
           type: 'warning'
         }).then(() => {
           // 调用停用、启用接口
-          // _this.$http.post(toggleAccountApi, {
-          //   id: scope.id
-          // }).then((response) => {
-          //   response.data.data.list.forEach((item) => {
-          //     item.addTime = moment(item.createTime).format('YYYY-MM-DD')
-          //   })
-          //   _this.$set(_this.$data, 'tableData', response.data.data.list)
-          //   _this.$set(_this.pageInfo, 'total', response.data.data.pages)
-          // }).catch((err) => {
-          //   console.log(err)
-          // })
-
+          _this.$http.post(toggleAccountApi, {
+            id: scope.row.id,
+            status: scope.row.status
+          }).then((response) => {
+            if (response.data.code === 0) {
+              _this.getProvider()
+            }
+          }).catch((err) => {
+            console.log(err)
+          })
           this.$message({
             type: 'success',
             message: tipsTextOk
