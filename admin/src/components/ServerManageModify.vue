@@ -1,5 +1,6 @@
 <template>
-  <el-form class="modify" ref="form" :rules="ruleValidate" :model="server" 
+  <!-- :rules="ruleValidate" -->
+  <el-form class="modify" ref="form" :model="server" 
     label-width="100px" style="background:#fff;padding: 20px;"
     v-on:submit.prevent>
     <div class="title-oprate pb14 bor-btm-ec">
