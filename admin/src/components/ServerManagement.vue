@@ -110,7 +110,7 @@
         // 页面加载时的过渡效果显示
         this.fullscreenLoading = true
         let _this = this
-        let providerApi = 'api/provider/list?page=' + page + '&pageSize=' + pageSize
+        let providerApi = '/api/provider/list?page=' + page + '&pageSize=' + pageSize
         _this.$http.get(providerApi).then((response) => {
           // 页面加载时的过渡效果隐藏
           this.fullscreenLoading = false

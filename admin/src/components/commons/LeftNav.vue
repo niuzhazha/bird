@@ -1,27 +1,28 @@
 <template>
   <el-row class="left-nav">
     <el-col :span="24">
-      <el-menu :default-active="String(1)"
+      <el-menu :default-active="'lnav-1'"
         class="el-menu-vertical-demo"
+        router
         @open="handleOpen" @close="handleClose" @select="handleSelect">
         
         <template v-for="menu in menus">
           <el-menu-item
-            :index="String(menu.id)"
+            :index="'lnav-' + menu.id"
             v-if="typeof(menu.children) === 'undefined'"
             :key="menu.id">
             <i class="el-icon-menu"></i>{{menu.menuName}}
           </el-menu-item>
 
           <el-submenu
-            :index="String(menu.id)"
+            :index="'lnav-' + menu.id"
             :key="menu.id"
             v-else>
             <template slot="title">
               <i class="el-icon-menu"></i>{{menu.menuName}}
             </template>
             <el-menu-item
-              :index="String(submenu.id)"
+              :index="'lnav-' + submenu.id"
               v-for="submenu in menu.children"
               :key="submenu.id">{{submenu.menuName}}
             </el-menu-item>

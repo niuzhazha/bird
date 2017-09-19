@@ -85,7 +85,7 @@ export default {
             console.log(response.data.code)
             if (response.data.code === 0) {
               _this.$message.success('登录成功!')
-              _this.$router.push('/servermanagement')
+              _this.$router.push('/lnav-1')
             } else {
               _this.$message.error(response.data.message)
             }

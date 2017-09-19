@@ -30,7 +30,7 @@ export default new Router({
       name: 'Login',
       component: Login
     }, {
-      path: '/servermanagement',
+      path: '/lnav-1',
       name: 'ServerManagement',
       component: ServerManagement
     }, {
@@ -48,11 +48,11 @@ export default new Router({
       name: 'ServerManageDetails',
       component: ServerManageDetails
     }, {
-      path: '/financialmanagement',
+      path: '/lnav-10',
       name: 'FinancialManagement',
       component: FinancialManagement
     }, {
-      path: '/financialmanagebill',
+      path: '/lnav-11',
       name: 'FinancialManageBill',
       component: FinancialManageBill
     }, {
@@ -60,7 +60,7 @@ export default new Router({
       name: 'InvoiceManagement',
       component: InvoiceManagement
     }, {
-      path: '/usermanagement',
+      path: '/lnav-3',
       name: 'UserManagement',
       component: UserManagement
     }, {
@@ -68,7 +68,7 @@ export default new Router({
       name: 'UserCertificate',
       component: UserCertificate
     }, {
-      path: '/privilegemanagement',
+      path: '/lnav-4',
       name: 'PrivilegeManagement',
       component: PrivilegeManagement
     }, {
