@@ -93,7 +93,10 @@
     data () {
       return {
         tableData: [],
-        pageInfo: {}
+        pageInfo: {
+          // 记录当前页码
+          currentPage: 1
+        }
       }
     },
     mounted () {
@@ -129,7 +132,6 @@
         let _this = this
         // 启用、停用接口地址
         let toggleAccountApi = 'api/provider/updateStatusById?id=' + scope.row.id + '&status=' + scope.row.status
-        console.log(scope.row.status)
         let state = scope.row.status
         let showText = state === '正常' ? '账号停用后该服务商的所有账号都将被停用，确定要停用吗' : '确定要启用该服务商吗'
         let tipsTextOk = state === '正常' ? '账号已停用!' : '账号启用成功!'
@@ -145,14 +147,15 @@
             status: scope.row.status
           }).then((response) => {
             if (response.data.code === 0) {
-              _this.getProvider()
+              // 修改成功后，重新渲染页面。
+              _this.getProvider(this.pageInfo.currentPage)
+              this.$message({
+                type: 'success',
+                message: tipsTextOk
+              })
             }
           }).catch((err) => {
             console.log(err)
-          })
-          this.$message({
-            type: 'success',
-            message: tipsTextOk
           })
         }).catch(() => {
           this.$message({
@@ -164,6 +167,8 @@
       // 点击页码
       listenPage (p) {
         this.getProvider(p, 10)
+        // 翻页时，记录翻到了第几页
+        this.$set(this.pageInfo, 'currentPage', p)
       }
     }
   }
