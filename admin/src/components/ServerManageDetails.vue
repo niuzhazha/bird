@@ -6,34 +6,34 @@
         <el-button class="fr" style="color:#fff;font-size:14px;" type="primary" size="mini">修改</el-button>
       </router-link>
     </div>
-    <el-form-item label="公司全称：">
+    <el-form-item label="公司全称：" prop="companyName">
       <span>合肥亿佰人力资源有限公司</span>
     </el-form-item>
-    <el-form-item label="公司简称：">
+    <el-form-item label="公司简称：" prop="companyNameShort">
       <span>合肥亿佰</span>
     </el-form-item>
-    <el-form-item label="公司logo：">
+    <el-form-item label="公司logo：" prop="logo">
       <span><img src="../assets/images/details-logo.png"></span>
     </el-form-item>
-    <el-form-item label="公司规模：">
+    <el-form-item label="公司规模：" prop="scale">
       <span>40-99人</span>
     </el-form-item>
-    <el-form-item class="city" label="所在城市：">
+    <el-form-item class="city" label="所在城市：" prop="cityName">
       <span>合肥</span>
     </el-form-item>
-    <el-form-item label="公司地址：">
+    <el-form-item label="公司地址：" prop="">
       <span>合肥</span>
     </el-form-item>
-    <el-form-item label="公司法人：">
+    <el-form-item label="公司法人：" prop="">
       <span>合肥合肥</span>
     </el-form-item>
-    <el-form-item label="公司简介：">
+    <el-form-item label="公司简介：" prop="">
       <span>XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</span>
     </el-form-item>
-    <el-form-item label="营业执照：">
+    <el-form-item label="营业执照：" prop="">
       <span><img src="../assets/images/lisence.png"></span>
     </el-form-item>
-    <el-form-item label="合同附件：">
+    <el-form-item label="合同附件：" prop="">
       <a class="download" href="#">点击下载</a>
     </el-form-item>
     <div class="rate">
@@ -72,8 +72,23 @@
           type: [],
           resource: '',
           desc: ''
-        }
+        },
+        routerId: this.$route.id
       }
+    },
+    mounted () {
+      // let _this = this
+      // let loginApi = '/api/loginapi'
+      console.log(this.$route.id)
+      // let detailsApi = '/api/provider/getProviderDetailsById?id=' + _this.routerId
+      // this.$http.get(detailsApi).then(function (response) {
+      //   console.log(response)
+      //   if (response.data.code === 0) {
+      //     _this.$set(_this.$data, 'menus', response.data.data)
+      //   }
+      // }).catch(function (error) {
+      //   console.log(error)
+      // })
     },
     methods: {
       onSubmit () {

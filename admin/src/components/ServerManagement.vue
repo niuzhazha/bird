@@ -5,6 +5,7 @@
           <span>服务商管理</span>
           <!-- 路由跳转，携带type参数 -->
           <router-link :to="{ name: 'ServerManageModify', params: { type: 'add', id: 0 } }">
+          <!-- <router-link :to="{ name: 'ServerManageModify' }"> -->
             <el-button class="fr" style="color:#fff;font-size:14px;" type="primary" size="mini">添加客户</el-button>   
           </router-link>
         </div>
@@ -63,7 +64,7 @@
             label="操作"
             width="20%">
             <template scope="scope">
-              <router-link :to="{ path: 'servermanagedetails'}">
+              <router-link :to="{ path: 'servermanagedetails', query: {id: tableData[scope.$index].id} }">
                 <el-button type="text" size="small">查看详情</el-button>
               </router-link>
               <el-button type="text" size="small"
@@ -127,6 +128,7 @@
             }
           })
           _this.$set(_this.$data, 'tableData', response.data.data.list)
+          console.log(_this.tableData)
           _this.$set(_this.pageInfo, 'pages', response.data.data.pages)
           _this.$set(_this.pageInfo, 'total', response.data.data.total)
         }).catch((err) => {
