@@ -1,6 +1,9 @@
 <template>
   <!-- :rules="ruleValidate" -->
-  <el-form class="modify" :rules="rules" ref="form" :model="server" 
+  <!-- <el-form class="modify" 
+    :model="ruleForm" 
+    :rules="rules" 
+    ref="ruleForm" 
     label-width="100px" style="background:#fff;padding: 20px;"
     v-on:submit.prevent>
     <div class="title-oprate pb14 bor-btm-ec">
@@ -12,13 +15,13 @@
       </span>
     </div>
     <div class="server-count font14 col9">基本信息</div>
-    <el-form-item label="公司全称：">
-      <el-input v-model="server.companyName" placeholder="请输入公司全称，和营业执照上的保持一致"></el-input>
+    <el-form-item label="公司全称：" class="input-text-item" prop="companyName">
+      <el-input v-model="ruleForm.companyName" placeholder="请输入公司全称，和营业执照上的保持一致"></el-input>
     </el-form-item>
-    <el-form-item label="公司简称：">
-      <el-input v-model="server.companyNameShort" placeholder="请输入公司简介"></el-input>
-    </el-form-item>
-    <el-form-item label="公司LOGO：">
+    <el-form-item label="公司简称：" class="input-text-item" prop="companyNameShort">
+      <el-input v-model="ruleForm.companyNameShort" placeholder="请输入公司简介"></el-input>
+    </el-form-item> -->
+    <!-- <el-form-item label="公司LOGO：" prop="logo">
       <el-row>
         <el-upload
           action="https://jsonplaceholder.typicode.com/posts/"
@@ -27,54 +30,54 @@
           :on-remove="handleRemove">
           <el-button>点击上传公司LOGO</el-button>
         </el-upload>
-        <!-- <el-dialog v-model="dialogVisible" size="tiny">
-          <img width="100%" :src="dialogImageUrl" alt="">
-        </el-dialog> -->
       </el-row>
-    </el-form-item>
-    <el-form-item class="" label="公司规模：">
-      <el-select v-model="server.scale" placeholder="请选择公司规模" @change="selctScale">
+    </el-form-item> -->
+    <!-- <el-form-item class="" label="公司规模：" prop="scale">
+      <el-select v-model="server.scale" placeholder="请选择公司规模">
         <el-option
           v-for="scale in scales"
           :key="scale.code"
           :label="scale.name"
-          :value="server.scale">
+          :value="scale.code">
         </el-option>
       </el-select>
-    </el-form-item>
-    <el-form-item label="所在城市：">
+    </el-form-item> -->
+    <!-- <el-form-item label="所在城市：">
       <el-row>
         <el-col>
-          <el-select v-model="server_box.province" placeholder="请选择" @change="select" style="display:inline-block;width:49%">
-            <el-option
-              v-for="province in citys"
-              :key="province.code"
-              :label="province.name"
-              :value="province.code">
-            </el-option>
-          </el-select>
-          <el-select v-model="server_box.city" placeholder="请选择" style="display:inline-block;width:50%">
-            <el-option
-              v-for="city in subcitys"
-              :key="city.code"
-              :label="city.name"
-              :value="city.code">
-            </el-option>
-          </el-select>
+          <el-form-item prop="province">
+            <el-select v-model="server_box.province" placeholder="请选择" @change="select" style="display:inline-block;width:49%">
+              <el-option
+                v-for="province in citys"
+                :key="province.code"
+                :label="province.name"
+                :value="province.code">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item prop="city">
+            <el-select v-model="server_box.city" placeholder="请选择" style="display:inline-block;width:50%">
+              <el-option
+                v-for="city in subcitys"
+                :key="city.code"
+                :label="city.name"
+                :value="city.code">
+              </el-option>
+            </el-select>
+          </el-form-item>
         </el-col>
       </el-row>
-    </el-form-item>
-    <el-form-item label="公司地址：">
+    </el-form-item> -->
+    <!-- <el-form-item label="公司地址：" prop="addr">
       <el-input v-model="server.addr"></el-input>
     </el-form-item>
-    <el-form-item label="公司法人：">
+    <el-form-item label="公司法人：" prop="legalPerson">
       <el-input v-model="server.legalPerson"></el-input>
     </el-form-item>
-    <el-form-item label="公司简介：">
-      <!-- <el-input v-model="form.intro"></el-input> -->
+    <el-form-item label="公司简介：" prop="description">
       <el-input type="textarea" v-model="server.description" placeholder="请输入公司简介..."></el-input>
-    </el-form-item>
-    <el-form-item label="营业执照：">
+    </el-form-item> -->
+    <!-- <el-form-item label="营业执照：" prop="licenseList">
       <el-row>
         <img :src="item" v-for="item in server.licenseList">
         <el-upload
@@ -84,12 +87,9 @@
           :on-remove="handleRemove">
           <el-button>点击上传营业执照</el-button>
         </el-upload>
-        <!-- <el-dialog v-model="dialogVisible" size="tiny">
-          <img width="100%" :src="dialogImageUrl" alt="">
-        </el-dialog> -->
       </el-row>
-    </el-form-item>
-    <el-form-item label="合同附件：">
+    </el-form-item> -->
+    <!-- <el-form-item label="合同附件：">
       <el-row>
         <img :src="item" v-for="item in server.contractList">
         <el-upload
@@ -99,12 +99,9 @@
           :on-remove="handleRemove">
           <el-button>点击上传合同附件</el-button>
         </el-upload>
-        <!-- <el-dialog v-model="dialogVisible" size="tiny">
-          <img width="100%" :src="dialogImageUrl" alt="">
-        </el-dialog> -->
       </el-row>
-    </el-form-item>
-    <div class="server-count font14 col9">费用信息</div>
+    </el-form-item> -->
+    <!-- <div class="server-count font14 col9">费用信息</div>
     <el-form-item label="技术使用费：">
       <el-radio-group v-model="server.useRate">
         <el-radio class="radio" v-model="server.useRate.radio" label="1">1.2%</el-radio>
@@ -120,26 +117,78 @@
           <el-input v-model="server.taxRate.input" placeholder="请输入费率"></el-input><span style="padding-left:10px;">%</span>
         </el-radio>
       </el-radio-group>
+    </el-form-item> -->
+    <!-- <el-form-item class="submit-item">
+      <button class="next-btn" type="primary" @click="onSubmit('ruleForm')">下一步</button>
     </el-form-item>
-    <el-form-item>
-      <button class="next-btn" type="primary" @click="onSubmit('form')">下一步</button>
-    </el-form-item>
-  </el-form>
+  </el-form> -->
+
+  <el-form 
+      :model="formInline" 
+      :rules="ruleInline" 
+      ref="formInline"
+      label-width="100px" style="background:#fff;padding: 20px;"
+      class="modify">
+      <div class="title-oprate pb14 bor-btm-ec">
+        <span class="font14 col9">
+          <router-link :to="{ path: '/lnav-1' }" class="back-icon">
+            <img src="../assets/images/backIcon.png">
+          </router-link>
+          添加/修改服务商信息
+        </span>
+      </div>
+
+      <div class="server-count font14 col9">基本信息</div>
+      <el-form-item class="input-text-item" label="公司全称：" prop="companyName">
+        <el-input v-model="ruleForm.companyName" placeholder="请输入公司全称，和营业执照上的保持一致"></el-input>
+      </el-form-item>
+  
+      <el-form-item class="input-text-item" label="公司简称：" prop="companyNameShort">
+        <el-input class="input-text"
+          v-model="formInline.companyNameShort" 
+           placeholder="请输入公司简介"></el-input>
+      </el-form-item>
+
+      <el-form-item class="submit-item tc">
+        <el-button type="primary" @click="submitForm('formInline')">登录</el-button>
+      </el-form-item>
+    </el-form>
 </template>
 <script>
   export default {
     data () {
       return {
-        server: {
-          useRate: {
-            radio: '',
-            input: ''
-          },
-          taxRate: {
-            radio: '',
-            input: ''
-          },
-          scale: ''
+        formInline: {
+          companyName: '',
+          companyNameShort: ''
+        },
+        ruleInline: {
+          companyName: [
+            { required: true, message: '请输入公司全称', trigger: 'blur' }
+          ],
+          companyNameShort: [
+            { required: true, message: '请输入公司简称', trigger: 'blur' }
+          ]
+        },
+        ruleForm: {
+          companyName: '',
+          companyNameShort: ''
+          // logo: '',
+          // scale: '',
+          // province: '',
+          // city: '',
+          // addr: '',
+          // legalPerson: '',
+          // description: '',
+          // licenseList: '',
+          // useRate: {
+          //   radio: '',
+          //   input: ''
+          // },
+          // taxRate: {
+          //   radio: '',
+          //   input: ''
+          // }
         },
         rules: {
           companyName: [
@@ -147,28 +196,22 @@
           ],
           companyNameShort: [
             { required: true, message: '请输入公司简称', trigger: 'blur' }
-          ],
-          logo: [
-            { required: true, message: '请输入公司LOGO', trigger: 'blur' }
-          ],
-          scale: [
-            { required: true, message: '请选择公司规模', trigger: 'blur' }
-          ],
-          province: [
-            { required: true, message: '请选择所在城市', trigger: 'blur' }
-          ],
-          addr: [
-            { required: true, message: '请输入公司地址', trigger: 'blur' }
-          ],
-          legalPerson: [
-            { required: true, message: '请输入公司法人', trigger: 'blur' }
-          ],
-          description: [
-            { required: true, message: '请输入公司简介', trigger: 'blur' }
-          ],
-          licenseList: [
-            { required: true, message: '请输入营业执照', trigger: 'blur' }
           ]
+          // scale: [
+          //   { required: true, message: '请选择公司规模', trigger: 'blur' }
+          // ],
+          // province: [
+          //   { required: true, message: '请选择所在城市', trigger: 'blur' }
+          // ],
+          // addr: [
+          //   { required: true, message: '请输入公司地址', trigger: 'blur' }
+          // ],
+          // legalPerson: [
+          //   { required: true, message: '请输入公司法人', trigger: 'blur' }
+          // ],
+          // description: [
+          //   { required: true, message: '请输入公司简介', trigger: 'blur' }
+          // ]
         },
         server_box: {
           province: '',
@@ -179,27 +222,7 @@
         scales: []
       }
     },
-    // watch: {
-    //   'server.province' (val, oldVal) {
-    //     console.log(val)
-    //     清空第二个选择框中的可选数据
-    //     this.$set(this.$data, 'subcitys', [])
-    //     清空第二个选择框中的数据
-    //     this.$set(this.server, 'city', '')
-    //     this.citys.forEach(item => {
-    //       // console.log(item.code)
-    //       // console.log(val)
-    //       省份的code === 你选择的code
-    //       if (item.code === val) {
-    //         console.log(item)
-    //         被选中的城市存下来
-    //         this.$set(this.$data, 'subcitys', item.cities)
-    //       }
-    //     })
-    //   }
-    // },
     mounted () {
-      console.log(this.$route)
       if (this.$route.params.type === 'edit') {
         let item = {
           id: 0,
@@ -235,12 +258,19 @@
       this.getScale()
     },
     methods: {
+      submitForm (name) {
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            this.$message.error('表单验证OK!')
+          } else {
+            this.$message.error('表单验证失败!')
+          }
+        })
+      },
       onSubmit (name) {
         this.$refs[name].validate((valid) => {
           if (valid) {
-            alert('submit!')
-            console.log(valid)
-            localStorage.setItem('serverString', JSON.stringify(this.server))
+            // localStorage.setItem('serverString', JSON.stringify(this.server))
             // this.$router.push({
             //   name: 'ServerManageModifyTwo',
             //   params: { type: this.$route.params.type, id: this.$route.params.id }
@@ -250,8 +280,6 @@
             return false
           }
         })
-        // console.log('submit!')
-        // console.log(this.server)
       },
       getCities () {
         let _this = this
@@ -285,16 +313,16 @@
           }
         })
       },
-      selctScale (val) {
-        this.$set(this.$data, 'scales', [])
-        this.$set(this.server, 'scale', '')
-        // this.citys.forEach(item => {
-        //   if (item.code === val) {
-        //     // console.log(item)
-        //     this.$set(this.$data, 'subcitys', item.cities)
-        //   }
-        // })
-      },
+      // selctScale (val) {
+      //   this.$set(this.$data, 'scales', [])
+      //   this.$set(this.server, 'scale', '')
+      //   // this.citys.forEach(item => {
+      //   //   if (item.code === val) {
+      //   //     // console.log(item)
+      //   //     this.$set(this.$data, 'subcitys', item.cities)
+      //   //   }
+      //   // })
+      // },
       handlePictureCardPreview () {},
       handleRemove () {}
     }
