@@ -1,7 +1,7 @@
 <template>
   <el-form class="details" ref="form" :model="form" label-width="105px" style="background:#fff;padding: 20px;">
     <div class="title-oprate pb14 bor-btm-ec">
-      <span class="font14 col9"><a class="back-icon" href="#"><img src="../assets/images/backIcon.png"></a>服务商信息</span>
+      <span class="font14 col9"><router-link :to="{ path: '/lnav-1' }" class="back-icon"><img src="../assets/images/backIcon.png"></router-link>服务商信息</span>
       <router-link class="back-icon" :to="{ name: 'ServerManageModify', params: { type: 'edit', id: 0 } }">
         <el-button class="fr" style="color:#fff;font-size:14px;" type="primary" size="mini">修改</el-button>
       </router-link>

@@ -7,23 +7,6 @@
       </router-link>
       添加/修改服务商信息</span>
     </div>
-    <div class="server-count font14 col9">费用信息</div>
-    <el-form-item label="技术使用费：">
-      <el-radio-group v-model="server.rateone">
-        <el-radio class="radio" v-model="server.rateone.radio" label="1">1.2%</el-radio>
-        <el-radio class="radio" v-model="server.rateone.radio" label="2">
-          <el-input v-model="server.rateone.input" placeholder="请输入费率"></el-input>%
-        </el-radio>
-      </el-radio-group>
-    </el-form-item>
-    <el-form-item label="个人税率：">
-      <el-radio-group v-model="server.ratetwo">
-        <el-radio class="radio" v-model="server.ratetwo.radio" label="1">1.2%</el-radio>
-        <el-radio class="radio" v-model="server.ratetwo.radio" label="2">
-          <el-input v-model="server.ratetwo.input" placeholder="请输入费率"></el-input>%
-        </el-radio>
-      </el-radio-group>
-    </el-form-item>
     <div class="server-count font14 col9">系统账号与权限</div>
     <el-form-item label="管理员：">
       <el-input v-model="server.address"></el-input>
@@ -127,14 +110,6 @@
     data () {
       return {
         server: {
-          rateone: {
-            radio: '',
-            input: ''
-          },
-          ratetwo: {
-            radio: '',
-            input: ''
-          },
           address: '',
           corporate: ''
         },

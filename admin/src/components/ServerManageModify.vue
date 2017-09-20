@@ -1,11 +1,11 @@
 <template>
   <!-- :rules="ruleValidate" -->
-  <el-form class="modify" ref="form" :model="server" 
+  <el-form class="modify" :rules="rules" ref="form" :model="server" 
     label-width="100px" style="background:#fff;padding: 20px;"
     v-on:submit.prevent>
     <div class="title-oprate pb14 bor-btm-ec">
       <span class="font14 col9">
-        <router-link :to="{ path: '/hotel/list' }" class="back-icon">
+        <router-link :to="{ path: '/lnav-1' }" class="back-icon">
           <img src="../assets/images/backIcon.png">
         </router-link>
         添加/修改服务商信息
@@ -32,16 +32,20 @@
         </el-dialog> -->
       </el-row>
     </el-form-item>
-    <el-form-item class="width400" label="公司规模：">
-      <el-select v-model="server.scale" placeholder="请选择公司规模">
-        <el-option label="10-50" :value="server.scale"></el-option>
-        <el-option label="100-999" :value="server.scale"></el-option>
+    <el-form-item class="" label="公司规模：">
+      <el-select v-model="server.scale" placeholder="请选择公司规模" @change="selctScale">
+        <el-option
+          v-for="scale in scales"
+          :key="scale.code"
+          :label="scale.name"
+          :value="server.scale">
+        </el-option>
       </el-select>
     </el-form-item>
     <el-form-item label="所在城市：">
       <el-row>
-        <el-col :span="10">
-          <el-select v-model="server_box.province" placeholder="请选择" @change="select">
+        <el-col>
+          <el-select v-model="server_box.province" placeholder="请选择" @change="select" style="display:inline-block;width:49%">
             <el-option
               v-for="province in citys"
               :key="province.code"
@@ -49,7 +53,7 @@
               :value="province.code">
             </el-option>
           </el-select>
-          <el-select v-model="server_box.city" placeholder="请选择">
+          <el-select v-model="server_box.city" placeholder="请选择" style="display:inline-block;width:50%">
             <el-option
               v-for="city in subcitys"
               :key="city.code"
@@ -102,23 +106,23 @@
     </el-form-item>
     <div class="server-count font14 col9">费用信息</div>
     <el-form-item label="技术使用费：">
-      <el-radio-group v-model="server.rateone">
-        <el-radio class="radio" v-model="server.rateone.radio" label="1">1.2%</el-radio>
-        <el-radio class="radio" v-model="server.rateone.radio" label="2">
-          <el-input v-model="server.rateone.input" placeholder="请输入费率"></el-input>%
+      <el-radio-group v-model="server.useRate">
+        <el-radio class="radio" v-model="server.useRate.radio" label="1">1.2%</el-radio>
+        <el-radio class="radio" v-model="server.useRate.radio" label="2">
+          <el-input v-model="server.useRate.input" placeholder="请输入费率"></el-input><span style="padding-left:10px;">%</span>
         </el-radio>
       </el-radio-group>
     </el-form-item>
     <el-form-item label="个人税率：">
-      <el-radio-group v-model="server.ratetwo">
-        <el-radio class="radio" v-model="server.ratetwo.radio" label="1">1.2%</el-radio>
-        <el-radio class="radio" v-model="server.ratetwo.radio" label="2">
-          <el-input v-model="server.ratetwo.input" placeholder="请输入费率"></el-input>%
+      <el-radio-group v-model="server.taxRate">
+        <el-radio class="radio" v-model="server.taxRate.radio" label="1">1.2%</el-radio>
+        <el-radio class="radio" v-model="server.taxRate.radio" label="2">
+          <el-input v-model="server.taxRate.input" placeholder="请输入费率"></el-input><span style="padding-left:10px;">%</span>
         </el-radio>
       </el-radio-group>
     </el-form-item>
     <el-form-item>
-      <button class="next-btn" type="primary" @click="onSubmit">下一步</button>
+      <button class="next-btn" type="primary" @click="onSubmit('form')">下一步</button>
     </el-form-item>
   </el-form>
 </template>
@@ -127,21 +131,52 @@
     data () {
       return {
         server: {
-          rateone: {
+          useRate: {
             radio: '',
             input: ''
           },
-          ratetwo: {
+          taxRate: {
             radio: '',
             input: ''
-          }
+          },
+          scale: ''
+        },
+        rules: {
+          companyName: [
+            { required: true, message: '请输入公司全称', trigger: 'blur' }
+          ],
+          companyNameShort: [
+            { required: true, message: '请输入公司简称', trigger: 'blur' }
+          ],
+          logo: [
+            { required: true, message: '请输入公司LOGO', trigger: 'blur' }
+          ],
+          scale: [
+            { required: true, message: '请选择公司规模', trigger: 'blur' }
+          ],
+          province: [
+            { required: true, message: '请选择所在城市', trigger: 'blur' }
+          ],
+          addr: [
+            { required: true, message: '请输入公司地址', trigger: 'blur' }
+          ],
+          legalPerson: [
+            { required: true, message: '请输入公司法人', trigger: 'blur' }
+          ],
+          description: [
+            { required: true, message: '请输入公司简介', trigger: 'blur' }
+          ],
+          licenseList: [
+            { required: true, message: '请输入营业执照', trigger: 'blur' }
+          ]
         },
         server_box: {
           province: '',
           city: ''
         },
         citys: [],
-        subcitys: []
+        subcitys: [],
+        scales: []
       }
     },
     // watch: {
@@ -197,10 +232,11 @@
         this.$set(this.$data, 'server', server)
       }
       this.getCities()
+      this.getScale()
     },
     methods: {
-      onSubmit () {
-        this.$refs['form'].validate((valid) => {
+      onSubmit (name) {
+        this.$refs[name].validate((valid) => {
           if (valid) {
             alert('submit!')
             console.log(valid)
@@ -227,6 +263,16 @@
           console.log(error)
         })
       },
+      getScale () {
+        let _this = this
+        let scaleApi = '/api/provider/scale'
+        this.$http.get(scaleApi).then(function (response) {
+          // console.log(response)
+          _this.$set(_this.$data, 'scales', response.data.data)
+        }).catch(function (error) {
+          console.log(error)
+        })
+      },
       select (val) {
         this.$set(this.$data, 'subcitys', [])
         this.$set(this.server, 'city', '')
@@ -238,6 +284,16 @@
             this.$set(this.$data, 'subcitys', item.cities)
           }
         })
+      },
+      selctScale (val) {
+        this.$set(this.$data, 'scales', [])
+        this.$set(this.server, 'scale', '')
+        // this.citys.forEach(item => {
+        //   if (item.code === val) {
+        //     // console.log(item)
+        //     this.$set(this.$data, 'subcitys', item.cities)
+        //   }
+        // })
       },
       handlePictureCardPreview () {},
       handleRemove () {}
@@ -253,9 +309,12 @@
   .server-count {padding: 20px 0;}
   .el-input {/*width: 290px;border: 1px solid #dcdcdc;*/}
   /*.modify .el-input__inner {border: 1px solid #dcdcdc;width: 400px;}*/
-  .modify .el-select .el-input__inner {border: 1px solid #dcdcdc;width: 200px;}
-  .modify .width400 .el-input__inner {border: 1px solid #dcdcdc;width: 400px;}
+  /*.modify .el-select .el-input__inner {border: 1px solid #dcdcdc;width: 200px;}*/
+  /*.modify .width400 .el-input__inner {border: 1px solid #dcdcdc;width: 400px;}*/
   /*.modify .el-form-item__label {text-align: left;}*/
+  .el-form-item__content {
+    width: 50%;
+  }
   .modify .el-button {
     font-size: 12px;
     height: 24px;
@@ -272,10 +331,11 @@
     padding: 0!important;
     border-radius: 0;
   }
-  .city .el-input__inner {width: 190px;}
+  .city .el-input__inner {width: 25%;}
+  .el-select{width: 100%;}
   .city .el-input:first-child .el-input__inner {margin-right: 20px;}
   .city .el-input {width: 200px;}
-  .modify .el-textarea__inner {width: 400px;resize: none;}
+  .modify .el-textarea__inner {width: 100%;resize: none;}
   .next-btn {margin-left: calc( 50% - 160px );font-size: 18px;width: 320px;height: 50px;color: #fff;background-color: #4794fe;border-radius: 4px;border-top-style: none;border-right-style: none;border-bottom-style: none;border-left-style: none;}
   .el-upload--picture-card {
     background-color: #fff; 

@@ -1,11 +1,11 @@
 <template>
   <header class="g-header">
   	<img class="inner-logo" src="../../assets/images/birdwork-logo-inner.png">
-  	<a href="javascript:;" class="role-box">
+  	<a href="javascript:;" @click="showNav" class="role-box">
   		<span class="role-icon"></span>
   		<span class="role-text">管理员</span>
   		<span class="el-icon-arrow-down"></span>
-  		<nav>
+  		<nav v-show="navshow">
   			<router-link
   				class="nav-item" 
   				:to="{ path: 'modifypassword' }">
@@ -25,7 +25,8 @@
     data () {
       return {
         navToggle: false,
-        dialogVisible: false
+        dialogVisible: false,
+        navshow: false
       }
     },
     methods: {
@@ -49,6 +50,10 @@
           })
         }).catch(() => {
         })
+      },
+      showNav () {
+        console.log(111)
+        this.navshow = !this.navshow
       }
     }
   }
@@ -101,14 +106,13 @@
 	}
 	nav { 
 		display: none;
-		/*display: inline-block;*/
+		display: inline-block;
 		width: 160px;
 		position: absolute; 
 		top: 40px;
 		right: 0;
 		background-color: #FFF;
 		border: 1px solid #eee;
-		position: absolute;
 	}
 	nav:before, nav:after {
 		content: " ";
@@ -147,12 +151,12 @@
 		vertical-align: -1px;
 		margin-right: 10px;
 	}
-	.role-box:hover nav {
-		display: inline-block;
-	}
-	nav a:hover {
-		background-color: #eee;
-	}
+	/*.role-box:hover nav {
+		
+	}*/
+	/*nav a:hover {
+		
+	}*/
 	.password-icon {
 		background: url('../../assets/images/lock-grey.png') center center no-repeat;
 		width: 14px; height: 14px;

@@ -17,51 +17,51 @@
           <el-table-column
             prop="id"
             label="ID"
-            width="70">
+            width="6%">
           </el-table-column>
           <el-table-column
             prop="companyName"
             label="公司名称"
-            width="180">
+            width="10%">
           </el-table-column>
           <el-table-column
             prop="scale"
             label="公司规模"
-            width="95">
+            width="10%">
           </el-table-column>
           <el-table-column
             prop="addr"
             label="公司地址"
-            width="180">
+            width="10%">
           </el-table-column>
           <el-table-column
             prop="legalPerson"
             label="公司法人"
-            width="95">
+            width="10%">
           </el-table-column>
           <el-table-column
             prop="openUser.name"
             label="管理员"
-            width="95">
+            width="8%">
           </el-table-column>
           <el-table-column
             prop="openUser.mobile"
             label="联系方式"
-            width="140">
+            width="14%">
           </el-table-column>
           <el-table-column
             prop="addTime"
             label="添加时间"
-            width="160">
+            width="14%">
           </el-table-column>
           <el-table-column
             prop="state"
             label="状态"
-            width="80">
+            width="10%">
           </el-table-column>
           <el-table-column
             label="操作"
-            width="180">
+            width="20%">
             <template scope="scope">
               <router-link :to="{ path: 'servermanagedetails'}">
                 <el-button type="text" size="small">查看详情</el-button>
@@ -110,7 +110,7 @@
         // 页面加载时的过渡效果显示
         this.fullscreenLoading = true
         let _this = this
-        let providerApi = '/api/provider/list?page=' + page + '&pageSize=' + pageSize
+        let providerApi = 'api/provider/list?page=' + page + '&pageSize=' + pageSize
         _this.$http.get(providerApi).then((response) => {
           // 页面加载时的过渡效果隐藏
           this.fullscreenLoading = false
@@ -145,6 +145,10 @@
 
         // 要变成什么状态
         let changeStatus = status === 0 ? 1 : 0
+        // let changeStatus = 0
+        // if (status === 0) {
+        //   changeStatus = 1
+        // }
 
         // 启用、停用接口地址
         let toggleAccountApi = 'api/provider/updateStatusById?id=' + scope.row.id + '&status=' + changeStatus
@@ -193,6 +197,7 @@
   .el-table {
     border: 0;
   }
+  .el-table__header,.el-table__body {width: 100%!important;}
   /*.th {color: #999;}*/
   .el-button {font-size: 14px;/*color: #4399ff;*/}
   .main-content {

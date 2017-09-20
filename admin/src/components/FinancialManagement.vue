@@ -3,13 +3,14 @@
       <div class="main-content">
         <div class="title-oprate">
           <nav class="charge-nav">
-            <a class="active" href="#">待充值</a>
-            <a href="#">已充值</a>
-            <a href="#">已取消</a>
+            <a :class="{'active': toggleFlag === 0}" href="javascript:;" @click="changeNav(0)">待充值</a>
+            <a :class="{'active': toggleFlag === 1}" href="javascript:;" @click="changeNav(1)">已充值</a>
+            <a :class="{'active': toggleFlag === 2}" href="javascript:;" @click="changeNav(2)">已取消</a>
           </nav>
         </div>
         <div class="server-count">共<span>1000</span>条</div>
         <el-table
+          v-show="toggleFlag === 0"
           class="table-list"
           :data="tableData"
           stripe
@@ -54,6 +55,92 @@
             </template>
           </el-table-column>
         </el-table>
+        <el-table
+          v-show="toggleFlag === 1"
+          class="table-list"
+          :data="tableData"
+          stripe
+          style="width: 100%;border: 0;color: #666;">
+          <el-table-column
+            fixed
+            prop="id"
+            label="服务商ID"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            prop="companyname"
+            label="服务商名称"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="admin"
+            label="联系方式"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="contact"
+            label="账户余额"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="date"
+            label="充值时间"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="state"
+            label="充值金额"
+            width="180">
+          </el-table-column>
+        </el-table>
+        <el-table
+          v-show="toggleFlag === 2"
+          class="table-list"
+          :data="tableData"
+          stripe
+          style="width: 100%;border: 0;color: #666;">
+          <el-table-column
+            fixed
+            prop="id"
+            label="服务商ID"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            prop="companyname"
+            label="服务商名称"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="admin"
+            label="联系方式"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="contact"
+            label="账户余额"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="date"
+            label="充值申请时间"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="state"
+            label="充值金额"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="state"
+            label="取消时间"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="state"
+            label="取消原因"
+            width="180">
+          </el-table-column>
+        </el-table>
       </div>
       <div class="pagination-box">
         <pagination-comp 
@@ -77,6 +164,7 @@
     },
     data () {
       return {
+        toggleFlag: 0,
         tableData: [{
           id: 1001,
           companyname: '合肥亿佰人力有限公司',
@@ -121,6 +209,9 @@
       }
     },
     methods: {
+      changeNav (index) {
+        this.toggleFlag = index
+      },
       toggleAccount (index, rows) {
         console.log(index)
         // 可取到当前条目的信息
