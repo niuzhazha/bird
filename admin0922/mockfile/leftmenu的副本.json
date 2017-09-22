@@ -1,0 +1,75 @@
+[{
+  "id": 1,
+  "menuName": "服务商管理",
+  "parentId": 1,
+  "menuUrl": "/hotel/list",
+  "sort": 0,
+  "delete": 0,
+  "createTime": 1494942064000,
+  "updateTime": 1498048034000
+}, {
+  "id": 2,
+  "menuName": "财务管理",
+  "parentId": 2,
+  "menuUrl": "/admin/manager/list",
+  "sort": 0,
+  "delete": 0,
+  "createTime": 1496215085000,
+  "updateTime": 1498049401000,
+  "children": [{
+    "id": 10,
+    "menuName": "服务商提交管理",
+    "parentId": 2,
+    "menuUrl": "/order/pre_audit",
+    "sort": 0,
+    "delete": 0,
+    "createTime": 1498047321000,
+    "updateTime": 1499494577000
+  }, {
+    "id": 11,
+    "menuName": "发票管理",
+    "parentId": 2,
+    "menuUrl": "/order/pre_audit",
+    "sort": 0,
+    "delete": 0,
+    "createTime": 1498047321000,
+    "updateTime": 1499494577000
+  }]
+}, {
+  "id": 3,
+  "menuName": "用户管理",
+  "parentId": 3,
+  "menuUrl": "",
+  "sort": 0,
+  "delete": 0,
+  "createTime": 1498046974000,
+  "updateTime": 1498048034000,
+  "children": [{
+    "id": 12,
+    "menuName": "用户信息",
+    "parentId": 3,
+    "menuUrl": "/order/pre_audit",
+    "sort": 0,
+    "delete": 0,
+    "createTime": 1498047321000,
+    "updateTime": 1499494577000
+  }, {
+    "id": 13,
+    "menuName": "实名认证审核",
+    "parentId": 3,
+    "menuUrl": "/order/pre_audit",
+    "sort": 0,
+    "delete": 0,
+    "createTime": 1498047321000,
+    "updateTime": 1499494577000
+  }]
+}, {
+  "id": 4,
+  "menuName": "权限管理",
+  "parentId": 4,
+  "menuUrl": "",
+  "sort": 0,
+  "delete": 0,
+  "createTime": 1496324558000,
+  "updateTime": 1498048034000
+}]
