@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import ServerManagement from '@/components/ServerManagement'
 import ServerManageModify from '@/components/ServerManageModify'
 import ServerManageModifyTwo from '@/components/ServerManageModifyTwo'
-// import ServerManageModifyTwo from '@/components/ServerManageModifyTwo_demo'
+import ServerManageModifyTwoDemo from '@/components/ServerManageModifyTwo_demo'
 import ServerManageDetails from '@/components/ServerManageDetails'
 import FinancialManagement from '@/components/FinancialManagement'
 import FinancialManageBill from '@/components/FinancialManageBill'
@@ -44,6 +44,11 @@ export default new Router({
       component: ServerManageModifyTwo
     },
     {
+      path: '/ServerManageModifyTwoDemo',
+      name: 'ServerManageModifyTwoDemo',
+      component: ServerManageModifyTwoDemo
+    },
+    {
       path: '/servermanagedetails',
       name: 'ServerManageDetails',
       component: ServerManageDetails
@@ -60,11 +65,11 @@ export default new Router({
       name: 'InvoiceManagement',
       component: InvoiceManagement
     }, {
-      path: '/lnav-3',
+      path: '/lnav-16',
       name: 'UserManagement',
       component: UserManagement
     }, {
-      path: '/usercertificate',
+      path: '/lnav-17',
       name: 'UserCertificate',
       component: UserCertificate
     }, {

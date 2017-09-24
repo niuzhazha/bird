@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import Qs from 'qs'
 export default {
   name: 'login',
   data () {
@@ -78,30 +79,15 @@ export default {
           // Make a request for a user with a given ID
           let _this = this
           // ?mobile=18642894278&password=123456
-          // let loginApi = '/api/loginapi'
-          let loginApi = '/api/loginTest?mobile=' + _this.formInline.mobile + '&password=' + _this.formInline.password
-          this.$http.get(loginApi).then(function (response) {
-            // console.log(response)
-            console.log(response.data.code)
-            if (response.data.code === 0) {
-              _this.$message.success('登录成功!')
-              _this.$router.push('/lnav-1')
-            } else {
-              _this.$message.error(response.data.message)
-            }
-          }).catch(function (error) {
-            console.log(error)
-            _this.$message.error(error.data.message)
-          })
-
-          // this.$http.post(loginApi, {
-          //   mobile: _this.formInline.mobile,
-          //   password: _this.formInline.password
-          // }).then(function (response) {
-          //   // console.log(response)
+          let loginApi = 'http://testapi.center.birdwork.cn/api/login'
+          // let loginApi = 'http://127.0.0.1:8888/api/login'
+          // let loginApi = '/api/loginTest?mobile=' + _this.formInline.mobile + '&password=' + _this.formInline.password
+          // this.$http.get(loginApi).then(function (response) {
+          //   console.log(response)
+          //   console.log(response.data.code)
           //   if (response.data.code === 0) {
-          //     _this.$message.success('登陆成功!')
-          //     _this.$router.push('/servermanagement')
+          //     _this.$message.success('登录成功!')
+          //     _this.$router.push('/lnav-1')
           //   } else {
           //     _this.$message.error(response.data.message)
           //   }
@@ -109,6 +95,25 @@ export default {
           //   console.log(error)
           //   _this.$message.error(error.data.message)
           // })
+          let data = Qs.stringify({'mobile': _this.formInline.mobile,
+            'password': _this.formInline.password})
+          this.$http.post(loginApi, data, {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).then(function (response) {
+            console.log(response)
+            if (response.status === 200) {
+              if (response.data.code === 0) {
+                // localStorage.setItem('json_data', JSON.stringify())
+                _this.$message.success('登录成功!')
+                _this.$router.push('/lnav-1')
+              } else {
+                _this.$message.error(response.data.message)
+              }
+            } else {
+                // _this.$message.error('网络异常')
+            }
+          }).catch(function (error) {
+            console.log(error)
+            _this.$message.error(error.data.message)
+          })
         } else {
           this.$message.error('表单验证失败!')
         }

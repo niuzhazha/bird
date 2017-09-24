@@ -111,7 +111,7 @@
         // 页面加载时的过渡效果显示
         this.fullscreenLoading = true
         let _this = this
-        let providerApi = 'api/provider/list?page=' + page + '&pageSize=' + pageSize
+        let providerApi = 'http://192.168.0.107:8080/api/provider/list?page=' + page + '&pageSize=' + pageSize
         _this.$http.get(providerApi).then((response) => {
           // 页面加载时的过渡效果隐藏
           this.fullscreenLoading = false
@@ -128,7 +128,7 @@
             }
           })
           _this.$set(_this.$data, 'tableData', response.data.data.list)
-          console.log(_this.tableData)
+          // console.log(_this.tableData)
           _this.$set(_this.pageInfo, 'pages', response.data.data.pages)
           _this.$set(_this.pageInfo, 'total', response.data.data.total)
         }).catch((err) => {
@@ -153,7 +153,7 @@
         // }
 
         // 启用、停用接口地址
-        let toggleAccountApi = 'api/provider/updateStatusById?id=' + scope.row.id + '&status=' + changeStatus
+        let toggleAccountApi = 'http://192.168.0.107:8080/api/provider/updateStatusById?id=' + scope.row.id + '&status=' + changeStatus
         this.$confirm(showText, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -188,6 +188,7 @@
         this.getProvider(p, 10)
         // 翻页时，记录翻到了第几页
         this.$set(this.pageInfo, 'currentPage', p)
+        // localStorage.setItem('currentPage', p)
       }
     }
   }
