@@ -64,7 +64,7 @@
       <el-row>
         <el-col :span="5">
           <el-form-item prop="province">
-            <el-select v-model="formInline.province" placeholder="请选择" @change="select">
+            <el-select v-model="formInline.provinceCode" placeholder="请选择" @change="select">
               <el-option
                 v-for="province in citys"
                 :key="province.code"
@@ -76,7 +76,7 @@
         </el-col>
         <el-col :span="5" style="margin-left: 20px;">
           <el-form-item prop="city">
-            <el-select v-model="formInline.city" placeholder="请选择">
+            <el-select v-model="formInline.cityCode" placeholder="请选择">
               <el-option
                 v-for="city in subcitys"
                 :key="city.code"
@@ -210,8 +210,8 @@
           companyNameShort: '',
           logo_file: '',
           scale: '',
-          province: '',
-          city: '',
+          provinceCode: '',
+          cityCode: '',
           addr: '',
           legalPerson: '',
           description: '',
@@ -272,17 +272,29 @@
       }
     },
     mounted () {
+      let _this = this
+      let p = this.getCities()
+      this.getScale()
       if (this.$route.params.type === 'edit') {
         this.$set(this.$data, 'formInline', JSON.parse(localStorage.getItem('serverStrings')))
-        console.log(this)
+        this.$set(this.formInline, 'scale', this.formInline.scale + '')
+        console.log(p)
+        p.then(function() {
+          _this.citys.forEach(item => {
+            if (item.code === _this.formInline.provinceCode) {
+              console.log(item)
+              _this.$set(_this.$data, 'subcitys', item.cities)
+              _this.$set(_this.formInline, 'cityCode', _this.formInline.cityCode + '')
+            }
+          })
+        })
+        // console.log(this.formInline.cityCode, typeof this.formInline.cityCode)
       } else if (this.$route.params.type === 'goback') {
         console.log('goback')
         let serverStr = localStorage.getItem('serverString')
         let server = JSON.parse(serverStr)
         this.$set(this.$data, 'server', server)
       }
-      this.getCities()
-      this.getScale()
     },
     methods: {
       onSubmit (name) {
@@ -330,11 +342,12 @@
         let _this = this
         // let cityApi = 'http://192.168.0.107:8080/api/common/city'
         let cityApi = '/api/common/city'
-        this.$http.get(cityApi).then(function (response) {
+        let p = this.$http.get(cityApi).then(function (response) {
           _this.$set(_this.$data, 'citys', response.data.data)
         }).catch(function (error) {
           console.log(error)
         })
+        return p
       },
       getScale () {
         let _this = this
@@ -376,7 +389,7 @@
           method: 'post'
         }).then(res => {
           console.log(res)
-          let obj = {url: res.data, name:'img1'}
+          let obj = {url: res.data.data, name:'img1'}
           this.fileList.push(obj)
         })
         // console.log(this.formInline.logo_file)
