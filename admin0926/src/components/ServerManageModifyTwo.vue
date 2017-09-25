@@ -1,7 +1,7 @@
 <template>
   <el-form 
     class="modify2" 
-    ref="form" 
+    ref="formInline" 
     :model="formInline" 
     :rules="ruleInline"
     label-width="105px" 
@@ -14,17 +14,17 @@
       添加/修改服务商信息</span>
     </div>
     <div class="server-count font14 col9">系统账号与权限</div>
-    <el-form-item label="管理员：" prop="openUser.name">
+    <el-form-item label="管理员：" prop="name">
       <el-row>
         <el-col :span="10">
-          <el-input v-model="formInline.openUser.name" placeholder="请输入管理员名字"></el-input>
+          <el-input v-model="formInline.name" placeholder="请输入管理员名字"></el-input>
         </el-col>
       </el-row>
     </el-form-item>
-    <el-form-item label="联系方式：" prop="openUser.mobile">
+    <el-form-item label="联系方式：" prop="mobile">
       <el-row>
         <el-col :span="10">
-          <el-input v-model="formInline.openUser.mobile" placeholder="请输入联系方式"></el-input>
+          <el-input v-model="formInline.mobile" placeholder="请输入联系方式"></el-input>
         </el-col>
       </el-row>
     </el-form-item>
@@ -121,7 +121,7 @@
       </el-row>
     </el-form-item>
     <el-form-item class="submit-item tc">
-      <el-button class="next-btn" type="primary" @click="onSubmit('form')">确定</el-button>
+      <el-button class="next-btn" type="primary" @click="onSubmit('formInline')">确定</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -130,10 +130,8 @@
     data () {
       return {
         formInline: {
-          openUser: {
-            name: '',
-            mobile: ''
-          }
+          name: '',
+          mobile: ''
         },
         privilege: {
           home: {
@@ -171,11 +169,11 @@
           }
         },
         ruleInline: {
-          openUser: [
-            { required: true, message: '请输入管理员' }
+          name: [
+            { required: true, message: '请输入管理员', trigger: 'blur' }
           ],
           mobile: [
-            { required: true, message: '请输入联系方式' }
+            { required: true, message: '请输入联系方式', trigger: 'blur'}
           ]
         }
       }
@@ -186,35 +184,39 @@
     },
     methods: {
       onSubmit (name) {
-        // this.$refs[name].validate((valid) => {
-          // if (valid) {
         let _this = this
-        // console.log(valid)
-        let addApi = '/api/provider/addOpenUser'
-        this.$http({
-          url: addApi,
-          params: {
-            'name': _this.formInline.openUser.name,
-            'mobile': _this.formInline.openUser.mobile,
-            'authIds': '1',
-            'providerId': '37'
-          },
-          method: 'post'
-        }).then(function (response) {
-          // console.log(response)
-          if (response.data.code === 0) {
-            _this.$message.success('新增成功!')
-            _this.$router.push('/lnav-1')
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            // console.log(valid)
+            let addApi = '/api/provider/addOpenUser'
+            this.$http({
+              url: addApi,
+              params: {
+                'name': _this.formInline.name,
+                'mobile': _this.formInline.mobile,
+                'authIds': '1',
+                'providerId': '37'
+              },
+              method: 'post'
+            }).then(function (response) {
+              // console.log(response)
+              if (response.data.code === 0) {
+                _this.$message.success('新增成功!')
+                _this.$router.push('/lnav-1')
+              } else {
+                _this.$message.error(response.data.message)
+              }
+            }).catch(function (error) {
+              console.log(error)
+              _this.$message.error(error.data.message)
+            })
           } else {
-            _this.$message.error(response.data.message)
+            _this.$message.error('验证失败！')
           }
-        }).catch(function (error) {
-          console.log(error)
-          _this.$message.error(error.data.message)
         })
       },
-      // 系统权限功能
       toggleCheck (type, val) {
+        // 系统权限功能
         // 存放传入的具体点按checkbox
         let typeArr = []
         if (type.indexOf('.') > -1) {
