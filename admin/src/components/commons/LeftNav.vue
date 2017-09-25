@@ -51,9 +51,9 @@ export default {
   mounted () {
     let _this = this
     // let loginApi = '/api/loginapi'
-    let menuApi = '/api/menu'
+    let menuApi = 'http://192.168.0.107:8080/api/menu'
     this.$http.get(menuApi).then(function (response) {
-      console.log(response)
+      // console.log(response)
       if (response.data.code === 0) {
         _this.$set(_this.$data, 'menus', response.data.data)
       }

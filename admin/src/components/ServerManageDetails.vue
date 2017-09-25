@@ -6,32 +6,32 @@
         <el-button class="fr" style="color:#fff;font-size:14px;" type="primary" size="mini">修改</el-button>
       </router-link>
     </div>
-    <el-form-item label="公司全称：" prop="companyName">
-      <span>合肥亿佰人力资源有限公司</span>
+    <el-form-item label="公司全称：">
+      {{ form.companyName }}
     </el-form-item>
-    <el-form-item label="公司简称：" prop="companyNameShort">
-      <span>合肥亿佰</span>
+    <el-form-item label="公司简称：">
+      {{ form.companyNameShort }}
     </el-form-item>
-    <el-form-item label="公司logo：" prop="logo">
-      <span><img src="../assets/images/details-logo.png"></span>
+    <el-form-item label="公司logo：">
+      {{ form.logo }}
     </el-form-item>
-    <el-form-item label="公司规模：" prop="scale">
-      <span>40-99人</span>
+    <el-form-item label="公司规模：">
+      {{ form.scale }}
     </el-form-item>
-    <el-form-item class="city" label="所在城市：" prop="cityName">
-      <span>合肥</span>
+    <el-form-item class="city" label="所在城市：">
+      {{ form.cityName }}
     </el-form-item>
-    <el-form-item label="公司地址：" prop="">
-      <span>合肥</span>
+    <el-form-item label="公司地址：">
+      {{ form.addr }}
     </el-form-item>
-    <el-form-item label="公司法人：" prop="">
-      <span>合肥合肥</span>
+    <el-form-item label="公司法人：">
+      {{ form.legalPerson }}
     </el-form-item>
-    <el-form-item label="公司简介：" prop="">
-      <span>XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</span>
+    <el-form-item label="公司简介：">
+      {{ form.description }}
     </el-form-item>
-    <el-form-item label="营业执照：" prop="">
-      <span><img src="../assets/images/lisence.png"></span>
+    <el-form-item label="营业执照：">
+      {{ form.licenseList }}
     </el-form-item>
     <el-form-item label="合同附件：" prop="">
       <a class="download" href="#">点击下载</a>
@@ -39,22 +39,28 @@
     <div class="rate">
       <div class="server-count font14 col9">费用信息</div>
       <el-form-item label="技术使用费：">
-        <span>合肥合肥</span>
+        {{ form.useRate }}
       </el-form-item>
       <el-form-item label="个人税率：">
-        <span>合肥合肥</span>
+        {{ form.taxRate }}
       </el-form-item>
     </div>
     <div class="root">
       <div class="server-count font14 col9">系统账号与权限</div>
-      <el-form-item label="管理员：">
-        <span>成强</span>
+      <el-form-item label="管理员：" v-if="form.openUser === null" v-text="">
       </el-form-item>
-      <el-form-item label="联系方式：">
-        <span>18712344321</span>
+      <el-form-item label="管理员：" v-else-if="form.openUser != null">
+        {{ form.openUser.name }}
       </el-form-item>
-      <el-form-item label="系统权限：">
-        <span>客户管理、领队管理、用户管理、权限管理</span>
+      <el-form-item label="联系方式：" v-if="form.openUser === null" v-text="">
+      </el-form-item>
+      <el-form-item label="联系方式：" v-else-if="form.openUser != null">
+        {{ form.openUser.mobile }}
+      </el-form-item>
+      <el-form-item label="系统权限：" v-if="form.openUser === null" v-text="">
+      </el-form-item>
+      <el-form-item label="系统权限：" v-else-if="form.openUser != null">
+        {{ form.openUser.typeDesc }}
       </el-form-item>
     </div>
   </el-form>
@@ -63,38 +69,27 @@
   export default {
     data () {
       return {
-        form: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
-        },
-        routerId: this.$route.id
+        form: {},
+        routerId: this.$route.query.id
       }
     },
     mounted () {
-      // let _this = this
-      // let loginApi = '/api/loginapi'
-      console.log(this.$route.id)
-      // let detailsApi = '/api/provider/getProviderDetailsById?id=' + _this.routerId
-      // this.$http.get(detailsApi).then(function (response) {
-      //   console.log(response)
-      //   if (response.data.code === 0) {
-      //     _this.$set(_this.$data, 'menus', response.data.data)
-      //   }
-      // }).catch(function (error) {
-      //   console.log(error)
-      // })
-    },
-    methods: {
-      onSubmit () {
-        console.log('submit!')
-      }
+      let _this = this
+      let detailsApi = 'http://192.168.0.107:8080/api/provider/getProviderDetailsById?id=' + _this.routerId
+      this.$http.get(detailsApi).then(function (response) {
+        // console.log(response.data)
+        _this.$set(_this.$data, 'form', response.data)
+        if (response.data.code === 0) {
+          // console.log(_this.form)
+          // console.log(response)
+        }
+      }).catch(function (error) {
+        console.log(error)
+      })
     }
+    // page () {
+      // localStorage.getItem('currentPage')
+    // }
   }
 </script>
 <style>
@@ -105,7 +100,7 @@
   .bor-btm-ec {border-bottom: 1px solid #ececec;}
   .server-count {padding: 20px 0;}
   .el-input {/*width: 290px;border: 1px solid #dcdcdc;*/}
-  .modify .el-input__inner {border: 1px solid #dcdcdc;width: 400px;}
+  .modify .el-input__inner {border: 1px solid #dcdcdc;}
   .modify .el-form-item__label {text-align: left;}
   .modify .el-button {
     font-size: 12px;

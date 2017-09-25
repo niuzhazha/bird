@@ -29,11 +29,12 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
         // 代理所有的以 /api 开头的请求到 http://jsonplaceholder.typicode.com
-        '/api': {
-            target: 'http://testapi.center.birdwork.cn',
-            changeOrigin: true,
-            pathRewrite: {}
-        }
+        // '/api': {
+        //     target: 'http://testapi.center.birdwork.cn',
+        //     // target: 'http://192.168.0.107:8080',
+        //     changeOrigin: true,
+        //     pathRewrite: {}
+        // }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README
