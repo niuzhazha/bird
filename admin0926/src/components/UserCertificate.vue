@@ -3,16 +3,16 @@
       <div class="main-content">
         <div class="title-oprate">
           <nav class="charge-nav">
-            <a :class="{'active': toggleFlag === 0}" href="#" @click="changeNav(0)">待审核</a>
-            <a :class="{'active': toggleFlag === 1}" href="#" @click="changeNav(1)">未通过</a>
-            <a :class="{'active': toggleFlag === 2}" href="#" @click="changeNav(2)">已通过</a>
+            <a :class="{'active': toggleFlag === 0}" href="javascript:;" @click="changeNav(0)">待审核</a>
+            <a :class="{'active': toggleFlag === 1}" href="javascript:;" @click="changeNav(1)">未通过</a>
+            <a :class="{'active': toggleFlag === 2}" href="javascript:;" @click="changeNav(2)">已通过</a>
           </nav>
         </div>
         <div class="main-table" v-show="toggleFlag === 0">
           <div class="server-count">共<span>{{ pageInfo.total }}</span>条</div>
           <el-table
             class="table-list"
-            :data="tableDataTodo"
+            :data="tableData"
             stripe
             style="width: 100%;border: 0;color: #666;">
             <el-table-column
@@ -31,14 +31,14 @@
               width="180">
             </el-table-column>
             <el-table-column
-              prop="user.idcard"
+              prop="user.idCard"
               label="身份证号"
               width="180">
             </el-table-column>
-            <el-table-column prop="img" label="身份证正反面照" width="280">
+            <el-table-column label="身份证正反面照" width="280">
               <template scope="scope">
-                <img :src="scope.row.img[0]" @click="showPicDialog(scope.row.img[0],scope.row.img[1])">
-                <img :src="scope.row.img[1]" @click="showPicDialog(scope.row.img[0],scope.row.img[1])">
+                <img :src="scope.row.idCardFront" @click="showPicDialog(scope.row.idCardFront,scope.row.idCardBack)">
+                <img :src="scope.row.idCardBack" @click="showPicDialog(scope.row.idCardFront,scope.row.idCardBack)">
               </template>
             </el-table-column>
             <el-table-column
@@ -65,34 +65,34 @@
           <div class="server-count">共<span>{{ pageInfo.total }}</span>条</div>
           <el-table
             class="table-list"
-            :data="tableDataNo"
+            :data="tableData"
             stripe
             style="width: 100%;border: 0;color: #666;">
             <el-table-column
-              prop="username"
+              prop="user.name"
               label="姓名"
               width="100">
             </el-table-column>
             <el-table-column
-              prop="gender"
+              prop="user.genderText"
               label="性别"
               width="80">
             </el-table-column>
             <el-table-column
-              prop="birth"
+              prop="user.birthday"
               label="出生日期"
               width="180">
             </el-table-column>
             <el-table-column
-              prop="idcard"
+              prop="user.idCard"
               label="身份证号"
               width="180">
             </el-table-column>
-            <el-table-column prop="img" label="身份证正反面照" width="280">
-              <!-- <template scope="scope">
-                <img :src="scope.row.img[0]" @click="showPicDialog(scope.row.img[0],scope.row.img[1])">
-                <img :src="scope.row.img[1]" @click="showPicDialog(scope.row.img[0],scope.row.img[1])">
-              </template> -->
+            <el-table-column label="身份证正反面照" width="280">
+              <template scope="scope">
+                <img :src="scope.row.idCardFront" @click="showPicDialog(scope.row.idCardFront,scope.row.idCardBack)">
+                <img :src="scope.row.idCardBack" @click="showPicDialog(scope.row.idCardFront,scope.row.idCardBack)">
+              </template>
             </el-table-column>
             <el-table-column
               prop="subtime"
@@ -117,34 +117,34 @@
           <div class="server-count">共<span>{{ pageInfo.total }}</span>条</div>
           <el-table
             class="table-list"
-            :data="tableDataAccess"
+            :data="tableData"
             stripe
             style="width: 100%;border: 0;color: #666;">
             <el-table-column
-              prop="username"
+              prop="user.name"
               label="姓名"
               width="100">
             </el-table-column>
             <el-table-column
-              prop="gender"
+              prop="user.genderText"
               label="性别"
               width="80">
             </el-table-column>
             <el-table-column
-              prop="birth"
+              prop="user.birthday"
               label="出生日期"
               width="180">
             </el-table-column>
             <el-table-column
-              prop="idcard"
+              prop="user.idCard"
               label="身份证号"
               width="180">
             </el-table-column>
-            <el-table-column prop="img" label="身份证正反面照" width="280">
-             <!--  <template scope="scope">
-                <img :src="scope.row.img[0]" @click="showPicDialog(scope.row.img[0],scope.row.img[1])">
-                <img :src="scope.row.img[1]" @click="showPicDialog(scope.row.img[0],scope.row.img[1])">
-              </template> -->
+            <el-table-column label="身份证正反面照" width="280">
+              <template scope="scope">
+                <img :src="scope.row.idCardFront" @click="showPicDialog(scope.row.idCardFront,scope.row.idCardBack)">
+                <img :src="scope.row.idCardBack" @click="showPicDialog(scope.row.idCardFront,scope.row.idCardBack)">
+              </template>
             </el-table-column>
             <el-table-column
               prop="subtime"
@@ -156,7 +156,7 @@
       </div>
       <div class="pagination-box">
         <pagination-comp
-          v-if="tableDataTodo.length > 0"
+          v-if="tableData.length > 0"
           :totle-page="pageInfo.pages" 
           :current-page="1"
           v-on:jumpPage="listenPage"></pagination-comp>
@@ -198,126 +198,34 @@
           toggle: false
         },
         // tableData: [],
-        tableDataTodo: [],
-        tableDataNo: [],
-        tableDataAccess: [],
+        tableData: [],
         pageInfo: {
           // 记录当前页码
-          currentPage: 1
+          currentPage: 1,
+          certState: 2
         }
       }
     },
     mounted () {
-      this.getWorkerState2()
-      // this.getWorkerState1()
-      // this.getWorkerState0()
+      this.getWorkerState()
     },
     methods: {
       // 初始化页面数据
-      getWorkerState2 (page = 1, pageSize = 10, cerState = 2) {
+      getWorkerState (page = 1, pageSize = 10, certState = 2) {
         // 页面加载时的过渡效果显示
         this.fullscreenLoading = true
         let _this = this
-        let workerStateApi = '/api/worker/getListByCertState?page=' + page + '&pageSize=' + pageSize + '&cerState=' + cerState
+        let workerStateApi = '/api/worker/getListByCertState?page=' + page + '&pageSize=' + pageSize + '&certState=' + certState
         _this.$http.get(workerStateApi).then((response) => {
           this.fullscreenLoading = false
-          console.log(response)
-          // console.log(this.tableDataTodo)
           response.data.data.list.forEach((item) => {
-            // console.log(item)
             // item.state = item.status === 1 ? '已停用' : '正常'
             item.updateTime = moment(item.updateTime).format('YYYY-MM-DD')
-            if (item.user === null) {
-              item.name = ''
-            } else {
-              item.name = item.user.name
-              // item.contact = item.openUser.mobile
-            }
-            // console.log(item.certState)
-            // if (item.certState === 2) {
-              // _this.$set(_this.$data, 'tableDataTodo', response.data.data.list)
-            //   // console.log(tableDataTodo)
-              // _this.tableDataTodo.push(item)
-            // } else if (item.certState === 1) {
-            //   _this.$set(_this.$data, 'tableDataNo', response.data.data.list)
-            // } else if (item.certState === 0) {
-            //   _this.$set(_this.$data, 'tableDataAccess', response.data.data.list)
-            // }
+            item.user.genderText = item.user.gender === 1 ? '男' : '女'
+
           })
-          _this.$set(_this.$data, 'tableDataTodo', response.data.data.list)
-          // console.log(_this.tableData)
-          _this.$set(_this.pageInfo, 'pages', response.data.data.pages)
-          _this.$set(_this.pageInfo, 'total', response.data.data.total)
-        }).catch((err) => {
-          console.log(err)
-        })
-      },
-      getWorkerState1 (page = 1, pageSize = 10, certState = 1) {
-        // 页面加载时的过渡效果显示
-        this.fullscreenLoading = true
-        let _this = this
-        let workerStateApi = '/api/worker/getListByCertState?page=' + page + '&pageSize=' + pageSize + '&state=' + certState
-        _this.$http.get(workerStateApi).then((response) => {
-          this.fullscreenLoading = false
-          console.log(this.tableDataTodo)
-          response.data.data.list.forEach((item) => {
-            console.log(item)
-            // item.state = item.status === 1 ? '已停用' : '正常'
-            item.updateTime = moment(item.updateTime).format('YYYY-MM-DD')
-            if (item.user === null) {
-              item.name = ''
-            } else {
-              item.name = item.user.name
-              // item.contact = item.openUser.mobile
-            }
-            // console.log(item.certState)
-            // if (item.certState === 2) {
-              _this.$set(_this.$data, 'tableDataNo', response.data.data.list)
-            //   // console.log(tableDataTodo)
-            //   // _this.tableDataTodo.push(item)
-            // } else if (item.certState === 1) {
-            //   _this.$set(_this.$data, 'tableDataNo', response.data.data.list)
-            // } else if (item.certState === 0) {
-            //   _this.$set(_this.$data, 'tableDataAccess', response.data.data.list)
-            // }
-          })
-          // console.log(_this.tableData)
-          _this.$set(_this.pageInfo, 'pages', response.data.data.pages)
-          _this.$set(_this.pageInfo, 'total', response.data.data.total)
-        }).catch((err) => {
-          console.log(err)
-        })
-      },
-      getWorkerState0 (page = 1, pageSize = 10, certState = 0) {
-        // 页面加载时的过渡效果显示
-        this.fullscreenLoading = true
-        let _this = this
-        let workerStateApi = '/api/worker/getListByCertState?page=' + page + '&pageSize=' + pageSize + '&state=' + certState
-        _this.$http.get(workerStateApi).then((response) => {
-          this.fullscreenLoading = false
-          console.log(this.tableDataTodo)
-          response.data.data.list.forEach((item) => {
-            console.log(item)
-            // item.state = item.status === 1 ? '已停用' : '正常'
-            item.updateTime = moment(item.updateTime).format('YYYY-MM-DD')
-            if (item.user === null) {
-              item.name = ''
-            } else {
-              item.name = item.user.name
-              // item.contact = item.openUser.mobile
-            }
-            // console.log(item.certState)
-            // if (item.certState === 2) {
-              _this.$set(_this.$data, 'tableDataAccess', response.data.data.list)
-            //   // console.log(tableDataTodo)
-            //   // _this.tableDataTodo.push(item)
-            // } else if (item.certState === 1) {
-            //   _this.$set(_this.$data, 'tableDataNo', response.data.data.list)
-            // } else if (item.certState === 0) {
-            //   _this.$set(_this.$data, 'tableDataAccess', response.data.data.list)
-            // }
-          })
-          // console.log(_this.tableData)
+          _this.$set(_this.$data, 'tableData', response.data.data.list)
+          console.log(_this.tableData)
           _this.$set(_this.pageInfo, 'pages', response.data.data.pages)
           _this.$set(_this.pageInfo, 'total', response.data.data.total)
         }).catch((err) => {
@@ -326,6 +234,19 @@
       },
       changeNav (index) {
         this.toggleFlag = index
+        
+        switch(index) {
+          case 0:
+            this.pageInfo.certState = 2
+            break
+          case 1:
+            this.pageInfo.certState = 3
+            break
+          case 2:
+            this.pageInfo.certState = 0
+            break
+        }
+        this.getWorkerState(1, 10, this.pageInfo.certState)
       },
       showPicDialog (pic1, pic2) {
         console.log(pic1, pic2)
