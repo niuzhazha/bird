@@ -148,7 +148,7 @@
       <el-radio-group v-model="formInline.useRate_radio">
         <el-radio class="radio" :label="1">1.2%</el-radio>
         <el-radio class="radio" :label="2">
-          <el-input v-model="formInline.useRate_input" 
+          <el-input v-model="formInline.useRate" 
             placeholder="请输入费率" :disabled="formInline.useRate_radio === 1"></el-input>
           <span style="padding-left:10px;">%</span>
         </el-radio>
@@ -159,7 +159,7 @@
       <el-radio-group v-model="formInline.taxRate_radio">
         <el-radio class="radio" :label="1">1.2%</el-radio>
         <el-radio class="radio" :label="2">
-          <el-input v-model="formInline.taxRate_input" 
+          <el-input v-model="formInline.taxRate" 
             placeholder="请输入费率" :disabled="formInline.taxRate_radio === 1"></el-input>
           <span style="padding-left:10px;">%</span>
         </el-radio>
@@ -217,8 +217,10 @@
           description: '',
           licenseList: '',
           contractList: '',
+          useRate: 0,
           useRate_radio: 1,
           useRate_input: '',
+          taxRate: 0,
           taxRate_radio: 1,
           taxRate_input: ''
         },
@@ -278,16 +280,25 @@
       if (this.$route.params.type === 'edit') {
         this.$set(this.$data, 'formInline', JSON.parse(localStorage.getItem('serverStrings')))
         this.$set(this.formInline, 'scale', this.formInline.scale + '')
-        console.log(p)
         p.then(function() {
           _this.citys.forEach(item => {
             if (item.code === _this.formInline.provinceCode) {
-              console.log(item)
+              // console.log(item)
               _this.$set(_this.$data, 'subcitys', item.cities)
               _this.$set(_this.formInline, 'cityCode', _this.formInline.cityCode + '')
             }
           })
         })
+        // 技术使用费
+        this.formInline.useRate_radio = this.formInline.useRate === 1.2 ?
+        _this.$set(_this.formInline, 'useRate_radio', 1) :
+        _this.$set(_this.formInline, 'useRate_radio', 2)
+
+        // 个人税费
+        this.formInline.taxRate_radio = this.formInline.taxRate === 1.2 ?
+        _this.$set(_this.formInline, 'taxRate_radio', 1) :
+        _this.$set(_this.formInline, 'taxRate_radio', 2)
+        // console.log(this.formInline)
         // console.log(this.formInline.cityCode, typeof this.formInline.cityCode)
       } else if (this.$route.params.type === 'goback') {
         console.log('goback')
