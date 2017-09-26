@@ -160,13 +160,13 @@
           :totle-page="pageInfo.pages" 
           :current-page="1"
           v-on:jumpPage="listenPage"></pagination-comp>
+        <el-pagination
+          class="pagination-box"
+          layout="prev, pager, next"
+          @current-change="currentChange"
+          :total="pageInfo.total">
+        </el-pagination>
       </div>
-      <!-- <el-pagination
-        class="pagination-box"
-        layout="prev, pager, next"
-        @current-change="currentChange"
-        :total="1000">
-      </el-pagination> -->
       <el-dialog class="idcard-dialog" title="身份证正反面" :visible.sync="bigImg.toggle">
         <el-row>
           <el-col :span="12">
@@ -201,8 +201,7 @@
         tableData: [],
         pageInfo: {
           // 记录当前页码
-          currentPage: 1,
-          certState: 2
+          currentPage: 1
         }
       }
     },
@@ -234,19 +233,7 @@
       },
       changeNav (index) {
         this.toggleFlag = index
-        
-        switch(index) {
-          case 0:
-            this.pageInfo.certState = 2
-            break
-          case 1:
-            this.pageInfo.certState = 3
-            break
-          case 2:
-            this.pageInfo.certState = 0
-            break
-        }
-        this.getWorkerState(1, 10, this.pageInfo.certState)
+        this.getWorkerState(1, 10, index)
       },
       showPicDialog (pic1, pic2) {
         console.log(pic1, pic2)

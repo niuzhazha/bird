@@ -119,7 +119,7 @@
         <el-upload
           action="#"
           list-type="picture-card"
-          :file-listl="fileListl"
+          :file-list="fileListl"
           :on-remove="handleRemove_license"
           :on-success="uploadSuccess_license"
           :before-uploadL="beforeUpload_license">
@@ -132,9 +132,9 @@
       <el-row>
         <!-- <img :src="item" v-for="item in server.contractList"> -->
         <el-upload
-          action="http://testapi.center.birdwork.cn/api/common/upload"
+          action="#"
           list-type="picture-card"
-          :file-listc="fileListc"
+          :file-list="fileListc"
           :on-remove="handleRemove_contract"
           :on-success="uploadSuccess_contract"
           :before-uploadC="beforeUpload_contract">
@@ -144,7 +144,7 @@
     </el-form-item>
 
     <div class="server-count font14 col9">费用信息</div>
-    <el-form-item label="技术使用费：" prop="useRate_input">
+    <el-form-item label="技术使用费：" prop="useRate">
       <el-radio-group v-model="formInline.useRate_radio">
         <el-radio class="radio" :label="1">1.2%</el-radio>
         <el-radio class="radio" :label="2">
@@ -155,7 +155,7 @@
       </el-radio-group>
     </el-form-item>
     
-    <el-form-item label="个人税率：" prop="taxRate_input">
+    <el-form-item label="个人税率：" prop="taxRate">
       <el-radio-group v-model="formInline.taxRate_radio">
         <el-radio class="radio" :label="1">1.2%</el-radio>
         <el-radio class="radio" :label="2">
@@ -261,10 +261,10 @@
           // contractList: [
           //   { validator: contractPass, trigger: 'blur' }
           // ],
-          useRate_input: [
+          useRate: [
             { validator: useRatePass, trigger: 'blur' }
           ],
-          taxRate_input: [
+          taxRate: [
             { validator: taxRatePass, trigger: 'blur' }
           ]
         },
@@ -278,8 +278,20 @@
       let p = this.getCities()
       this.getScale()
       if (this.$route.params.type === 'edit') {
-        this.$set(this.$data, 'formInline', JSON.parse(localStorage.getItem('serverStrings')))
+        let serverObj = JSON.parse(localStorage.getItem('serverStrings'))
+        this.$set(this.$data, 'formInline', serverObj)
+
+        // 公司规模回显
         this.$set(this.formInline, 'scale', this.formInline.scale + '')
+        
+        // logo 回显
+        this.fileList.push({
+          name: 'logo',
+          url: serverObj.logo
+          // url: 'http://cdn.birdwork.com/images/normal/bcfeec4497c3839f21cc9349184460ff.png'
+        })
+
+        // 城市回显
         p.then(function() {
           _this.citys.forEach(item => {
             if (item.code === _this.formInline.provinceCode) {
@@ -289,17 +301,30 @@
             }
           })
         })
-        // 技术使用费
+
+        // 营业执照 回显
+        this.fileListl.push({
+          name: 'logo',
+          url: serverObj.logo
+          // url: 'http://cdn.birdwork.com/images/normal/bcfeec4497c3839f21cc9349184460ff.png'
+        })
+
+        // 合同附件 回显
+        this.fileListc.push({
+          name: 'logo',
+          url: serverObj.logo
+          // url: 'http://cdn.birdwork.com/images/normal/bcfeec4497c3839f21cc9349184460ff.png'
+        })
+
+        // 技术使用费回显
         this.formInline.useRate_radio = this.formInline.useRate === 1.2 ?
         _this.$set(_this.formInline, 'useRate_radio', 1) :
         _this.$set(_this.formInline, 'useRate_radio', 2)
 
-        // 个人税费
+        // 个人税费回显
         this.formInline.taxRate_radio = this.formInline.taxRate === 1.2 ?
         _this.$set(_this.formInline, 'taxRate_radio', 1) :
         _this.$set(_this.formInline, 'taxRate_radio', 2)
-        // console.log(this.formInline)
-        // console.log(this.formInline.cityCode, typeof this.formInline.cityCode)
       } else if (this.$route.params.type === 'goback') {
         console.log('goback')
         let serverStr = localStorage.getItem('serverString')
@@ -310,8 +335,8 @@
     methods: {
       onSubmit (name) {
         this.$refs[name].validate((valid) => {
+          console.log(name)
           if (valid) {
-        console.log('aaa')
             let _this = this
             let addApi = '/api/provider/addOrUpdate'
             this.$http({
@@ -324,9 +349,9 @@
                 'addr': _this.formInline.addr,
                 'legalPerson': _this.formInline.legalPerson,
                 'description': _this.formInline.description,
-                'useRate': '12',
-                'taxRate': '12',
-                'logo': '22',
+                'useRate': _this.formInline.useRate,
+                'taxRate': _this.formInline.taxRate,
+                'logo': _this.fileList[0].url,
                 'licenseList': '11',
                 'contractList': '33'
               },
