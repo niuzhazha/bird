@@ -314,11 +314,9 @@
     },
     methods: {
       onSubmit (name) {
-        console.log(555)
+        let _this = this
         this.$refs[name].validate((valid) => {
           if (valid) {
-        console.log('aaa')
-            let _this = this
             let addApi = '/api/provider/addOrUpdate'
             this.$http({
               url: addApi,
@@ -340,14 +338,9 @@
             }).then(function (response) {
               console.log(response)
               if (response.data.code === 0) {
-                let _this = this
+                localStorage.setItem('serverString', JSON.stringify(_this.formInline))
 
-                // _this.$message.success('!')
-                console.log(_this)
-                localStorage.setItem('serverString', JSON.stringify(this.formInline))
-                console.log(333)
-
-                _this.$router.push('/servermanagemodifytwo/add/0')
+                _this.$router.push('/servermanagemodifytwo/'+_this.$route.params.type+'/'+_this.$route.params.id)
               } else {
                 _this.$message.error(response.data.message)
               }
