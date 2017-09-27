@@ -3,16 +3,16 @@
       <div class="main-content">
         <div class="title-oprate">
           <nav class="charge-nav">
-            <a :class="{'active': toggleFlag === 0}" href="#" @click="changeNav(0)">待审核</a>
-            <a :class="{'active': toggleFlag === 1}" href="#" @click="changeNav(1)">未通过</a>
-            <a :class="{'active': toggleFlag === 2}" href="#" @click="changeNav(2)">已通过</a>
+            <a :class="{'active': toggleFlag === 0}" href="javascript:;" @click="changeNav(0)">待审核</a>
+            <a :class="{'active': toggleFlag === 1}" href="javascript:;" @click="changeNav(1)">未通过</a>
+            <a :class="{'active': toggleFlag === 2}" href="javascript:;" @click="changeNav(2)">已通过</a>
           </nav>
         </div>
         <div class="main-table" v-show="toggleFlag === 0">
-          <div class="server-count">共<span>30</span>条</div>
+          <div class="server-count">共<span>{{ pageInfo.total }}</span>条</div>
           <el-table
             class="table-list"
-            :data="tableDataTodo"
+            :data="tableData"
             stripe
             style="width: 100%;border: 0;color: #666;">
             <el-table-column
@@ -31,11 +31,11 @@
               width="180">
             </el-table-column>
             <el-table-column
-              prop="user.idcard"
+              prop="user.idCard"
               label="身份证号"
               width="180">
             </el-table-column>
-            <el-table-column prop="img" label="身份证正反面照" width="280">
+            <el-table-column label="身份证正反面照" width="280">
               <template scope="scope">
                 <img :src="scope.row.idCardFront" @click="showPicDialog(scope.row.idCardFront,scope.row.idCardBack)">
                 <img :src="scope.row.idCardBack" @click="showPicDialog(scope.row.idCardFront,scope.row.idCardBack)">
@@ -55,17 +55,17 @@
               label="操作"
               width="180">
               <template scope="scope">
-                <el-button type="text" size="small" @click="togglePass(scope, tableData)(scope, tableData)">通过</el-button>
-                <el-button type="text" size="small" @click="togglePass(scope, tableData)(scope, tableData)">不通过</el-button>
+                <el-button type="text" size="small" @click="togglePass(scope, 0)">通过</el-button>
+                <el-button type="text" size="small" @click="togglePass(scope, 3)">不通过</el-button>
               </template>
             </el-table-column>
           </el-table>
         </div>
         <div class="main-table" v-show="toggleFlag === 1">
-          <div class="server-count">共<span>30</span>条</div>
+          <div class="server-count">共<span>{{ pageInfo.total }}</span>条</div>
           <el-table
             class="table-list"
-            :data="tableDataNo"
+            :data="tableData"
             stripe
             style="width: 100%;border: 0;color: #666;">
             <el-table-column
@@ -74,7 +74,7 @@
               width="100">
             </el-table-column>
             <el-table-column
-              prop="user.gender"
+              prop="user.genderText"
               label="性别"
               width="80">
             </el-table-column>
@@ -84,11 +84,11 @@
               width="180">
             </el-table-column>
             <el-table-column
-              prop="user.idcard"
+              prop="user.idCard"
               label="身份证号"
               width="180">
             </el-table-column>
-            <el-table-column prop="img" label="身份证正反面照" width="280">
+            <el-table-column label="身份证正反面照" width="280">
               <template scope="scope">
                 <img :src="scope.row.idCardFront" @click="showPicDialog(scope.row.idCardFront,scope.row.idCardBack)">
                 <img :src="scope.row.idCardBack" @click="showPicDialog(scope.row.idCardFront,scope.row.idCardBack)">
@@ -108,16 +108,16 @@
               label="操作"
               width="180">
               <template scope="scope">
-                <el-button type="text" size="small" @click="togglePass(scope, tableData)">通过</el-button>
+                <el-button type="text" size="small" @click="togglePass(scope, 0)">通过</el-button>
               </template>
             </el-table-column>
           </el-table>
         </div>
         <div class="main-table" v-show="toggleFlag === 2">
-          <div class="server-count">共<span>30</span>条</div>
+          <div class="server-count">共<span>{{ pageInfo.total }}</span>条</div>
           <el-table
             class="table-list"
-            :data="tableDataAccess"
+            :data="tableData"
             stripe
             style="width: 100%;border: 0;color: #666;">
             <el-table-column
@@ -126,7 +126,7 @@
               width="100">
             </el-table-column>
             <el-table-column
-              prop="user.gender"
+              prop="user.genderText"
               label="性别"
               width="80">
             </el-table-column>
@@ -136,12 +136,12 @@
               width="180">
             </el-table-column>
             <el-table-column
-              prop="user.idcard"
+              prop="user.idCard"
               label="身份证号"
               width="180">
             </el-table-column>
-            <el-table-column prop="img" label="身份证正反面照" width="280">
-             <template scope="scope">
+            <el-table-column label="身份证正反面照" width="280">
+              <template scope="scope">
                 <img :src="scope.row.idCardFront" @click="showPicDialog(scope.row.idCardFront,scope.row.idCardBack)">
                 <img :src="scope.row.idCardBack" @click="showPicDialog(scope.row.idCardFront,scope.row.idCardBack)">
               </template>
@@ -156,7 +156,7 @@
       </div>
       <div class="pagination-box">
         <pagination-comp
-          v-if="tableDataTodo.length > 0"
+          v-if="tableData.length > 0"
           :totle-page="pageInfo.pages" 
           :current-page="1"
           v-on:jumpPage="listenPage"></pagination-comp>
@@ -198,125 +198,33 @@
           toggle: false
         },
         // tableData: [],
-        tableDataTodo: [],
-        tableDataNo: [],
-        tableDataAccess: [],
+        tableData: [],
         pageInfo: {
           // 记录当前页码
-          currentPage: 1
+          currentPage: 1,
+          certState: 2
         }
       }
     },
     mounted () {
-      this.getWorkerState2()
-      this.getWorkerState1()
-      this.getWorkerState0()
+      this.getWorkerState()
     },
     methods: {
       // 初始化页面数据
-      getWorkerState2 (page = 1, pageSize = 10, certState = 2) {
+      getWorkerState (page = 1, pageSize = 10, certState = 2) {
         // 页面加载时的过渡效果显示
         this.fullscreenLoading = true
         let _this = this
         let workerStateApi = '/api/worker/getListByCertState?page=' + page + '&pageSize=' + pageSize + '&certState=' + certState
         _this.$http.get(workerStateApi).then((response) => {
           this.fullscreenLoading = false
-          // console.log(response)
-          // console.log(this.tableDataTodo)
           response.data.data.list.forEach((item) => {
-            // console.log(item)
             // item.state = item.status === 1 ? '已停用' : '正常'
             item.updateTime = moment(item.updateTime).format('YYYY-MM-DD')
-            if (item.user === null) {
-              item.name = ''
-            } else {
-              item.name = item.user.name
-              // item.contact = item.openUser.mobile
-            }
-            // console.log(item.certState)
-            // if (item.certState === 2) {
-              // _this.$set(_this.$data, 'tableDataTodo', response.data.data.list)
-            //   // console.log(tableDataTodo)
-              // _this.tableDataTodo.push(item)
-            // } else if (item.certState === 1) {
-            //   _this.$set(_this.$data, 'tableDataNo', response.data.data.list)
-            // } else if (item.certState === 0) {
-            //   _this.$set(_this.$data, 'tableDataAccess', response.data.data.list)
-            // }
+            item.user.genderText = item.user.gender === 1 ? '男' : '女'
+
           })
-          _this.$set(_this.$data, 'tableDataTodo', response.data.data.list)
-          // console.log(_this.tableData)
-          _this.$set(_this.pageInfo, 'pages', response.data.data.pages)
-          _this.$set(_this.pageInfo, 'total', response.data.data.total)
-        }).catch((err) => {
-          console.log(err)
-        })
-      },
-      getWorkerState1 (page = 1, pageSize = 10, certState = 1) {
-        // 页面加载时的过渡效果显示
-        this.fullscreenLoading = true
-        let _this = this
-        let workerStateApi = '/api/worker/getListByCertState?page=' + page + '&pageSize=' + pageSize + '&certState=' + certState
-        _this.$http.get(workerStateApi).then((response) => {
-          this.fullscreenLoading = false
-          // console.log(this.tableDataTodo)
-          response.data.data.list.forEach((item) => {
-            // console.log(item)
-            // item.state = item.status === 1 ? '已停用' : '正常'
-            item.updateTime = moment(item.updateTime).format('YYYY-MM-DD')
-            if (item.user === null) {
-              item.name = ''
-            } else {
-              item.name = item.user.name
-              // item.contact = item.openUser.mobile
-            }
-            // console.log(item.certState)
-            // if (item.certState === 2) {
-              _this.$set(_this.$data, 'tableDataNo', response.data.data.list)
-            //   // console.log(tableDataTodo)
-            //   // _this.tableDataTodo.push(item)
-            // } else if (item.certState === 1) {
-            //   _this.$set(_this.$data, 'tableDataNo', response.data.data.list)
-            // } else if (item.certState === 0) {
-            //   _this.$set(_this.$data, 'tableDataAccess', response.data.data.list)
-            // }
-          })
-          // console.log(_this.tableData)
-          _this.$set(_this.pageInfo, 'pages', response.data.data.pages)
-          _this.$set(_this.pageInfo, 'total', response.data.data.total)
-        }).catch((err) => {
-          console.log(err)
-        })
-      },
-      getWorkerState0 (page = 1, pageSize = 10, certState = 0) {
-        // 页面加载时的过渡效果显示
-        this.fullscreenLoading = true
-        let _this = this
-        let workerStateApi = '/api/worker/getListByCertState?page=' + page + '&pageSize=' + pageSize + '&certState=' + certState
-        _this.$http.get(workerStateApi).then((response) => {
-          this.fullscreenLoading = false
-          // console.log(this.tableDataTodo)
-          response.data.data.list.forEach((item) => {
-            // console.log(item)
-            // item.state = item.status === 1 ? '已停用' : '正常'
-            item.updateTime = moment(item.updateTime).format('YYYY-MM-DD')
-            if (item.user === null) {
-              item.name = ''
-            } else {
-              item.name = item.user.name
-              // item.contact = item.openUser.mobile
-            }
-            // console.log(item.certState)
-            // if (item.certState === 2) {
-              _this.$set(_this.$data, 'tableDataAccess', response.data.data.list)
-            //   // console.log(tableDataTodo)
-            //   // _this.tableDataTodo.push(item)
-            // } else if (item.certState === 1) {
-            //   _this.$set(_this.$data, 'tableDataNo', response.data.data.list)
-            // } else if (item.certState === 0) {
-            //   _this.$set(_this.$data, 'tableDataAccess', response.data.data.list)
-            // }
-          })
+          _this.$set(_this.$data, 'tableData', response.data.data.list)
           // console.log(_this.tableData)
           _this.$set(_this.pageInfo, 'pages', response.data.data.pages)
           _this.$set(_this.pageInfo, 'total', response.data.data.total)
@@ -326,9 +234,22 @@
       },
       changeNav (index) {
         this.toggleFlag = index
+        
+        switch(index) {
+          case 0:
+            this.pageInfo.certState = 2
+            break
+          case 1:
+            this.pageInfo.certState = 3
+            break
+          case 2:
+            this.pageInfo.certState = 0
+            break
+        }
+        this.getWorkerState(1, 10, this.pageInfo.certState)
       },
       showPicDialog (pic1, pic2) {
-        // console.log(pic1, pic2)
+        console.log(pic1, pic2)
         this.$set(this.bigImg, 'up', pic1)
         this.$set(this.bigImg, 'down', pic2)
         this.$set(this.bigImg, 'toggle', true)
@@ -342,80 +263,75 @@
       hidePicDialog () {
         this.$set(this.bigImg, 'toggle', false)
       },
-      // toggleAccount (scope, rows) {
-      //   // 可取到当前条目的信息
-      //   let _this = this
-      //   let status = scope.row.status
-
-      //   // 提示语
-      //   let showText = status === 0 ? '账号停用后该服务商的所有账号都将被停用，确定要停用吗' : '确定要启用该服务商吗'
-      //   let tipsTextOk = status === 0 ? '账号已停用!' : '账号启用成功!'
-      //   let tipsTextCancel = status === 0 ? '已取消停用!' : '已取消启用'
-
-      //   // 要变成什么状态
-      //   let changeStatus = status === 0 ? 1 : 0
-      //   // let changeStatus = 0
-      //   // if (status === 0) {
-      //   //   changeStatus = 1
-      //   // }
-
-      //   // 启用、停用接口地址
-      //   let toggleAccountApi = '/api/provider/updateStatusById?id=' + scope.row.id + '&status=' + changeStatus
-      //   this.$confirm(showText, '提示', {
-      //     confirmButtonText: '确定',
-      //     cancelButtonText: '取消',
-      //     type: 'warning'
-      //   }).then(() => {
-      //     // 页面加载时的过渡效果显示
-      //     this.fullscreenLoading = true
-      //     // 调用停用、启用接口
-      //     _this.$http.get(toggleAccountApi).then((response) => {
-      //       // 页面加载时的过渡效果隐藏
-      //       this.fullscreenLoading = false
-      //       if (response.data.code === 0) {
-      //         // 修改成功后，重新渲染页面。
-      //         _this.getProvider(this.pageInfo.currentPage)
-      //         this.$message({
-      //           type: 'success',
-      //           message: tipsTextOk
-      //         })
-      //       }
-      //     }).catch((err) => {
-      //       console.log(err)
-      //     })
-      //   }).catch(() => {
-      //     this.$message({
-      //       type: 'info',
-      //       message: tipsTextCancel
-      //     })
-      //   })
-      // },
-      togglePass (index, rows) {
-        // console.log(index)
+      togglePass(scope, type) {
         // 可取到当前条目的信息
-        console.log(rows[index].id)
-        let state = rows[index].state
-        let tipsTextOk = state === '未认证' ? '未认证!' : '已认证！'
-        let tipsTextCancel = state === '正常' ? '已取消停用!' : '已取消启用'
-        this.$confirm('确定通过吗？', '提示', {
+        let _this = this
+        // let status = scope.row.certState
+        // console.log(status)
+        console.log('type', type)
+        console.log('userId', scope.row.id);
+        // console.log(scope.row)
+
+        // 提示语
+        let showText = type === 0 ? '确定要认证通过？' : '确定要认证不通过？'
+        let tipsTextOk = type === 0 ? '账号已通过!' : '账号不通过!'
+        let tipsTextCancel = type === 0 ? '已取消通过!' : '已取消不通过'
+
+        // 启用、停用接口地址
+        let togglePassApi = '/api/worker/updateWorkerAuditStatus?userId=' + scope.row.userId + '&certState=' + type
+        this.$confirm(showText, '提示', {
           confirmButtonText: '确定',
-          cancelButtonText: '取消'
-          // type: 'warning'
+          cancelButtonText: '取消',
+          type: 'warning'
         }).then(() => {
-          this.$message({
-            // type: 'success',
-            // message: tipsTextOk
+          // 页面加载时的过渡效果显示
+          this.fullscreenLoading = true
+          // 调用停用、启用接口
+          _this.$http.get(togglePassApi).then((response) => {
+            // 页面加载时的过渡效果隐藏
+            this.fullscreenLoading = false
+            if (response.data.code === 0) {
+              // 修改成功后，重新渲染页面。
+              _this.getWorkerState(this.pageInfo.currentPage)
+              this.$message({
+                type: 'success',
+                message: tipsTextOk
+              })
+            }
+          }).catch((err) => {
+            console.log(err)
           })
         }).catch(() => {
           this.$message({
-            // type: 'info'
-            // message: tipsTextCancel
+            type: 'info',
+            message: tipsTextCancel
           })
         })
+        // console.log(index)
+        // 可取到当前条目的信息
+        // console.log(rows[index].id)
+        // let state = rows[index].state
+        // let tipsTextOk = state === '未认证' ? '未认证!' : '已认证！'
+        // let tipsTextCancel = state === '正常' ? '已取消停用!' : '已取消启用'
+        // this.$confirm('确定通过吗？', '提示', {
+        //   confirmButtonText: '确定',
+        //   cancelButtonText: '取消'
+        //   // type: 'warning'
+        // }).then(() => {
+        //   this.$message({
+        //     // type: 'success',
+        //     // message: tipsTextOk
+        //   })
+        // }).catch(() => {
+        //   this.$message({
+        //     // type: 'info'
+        //     // message: tipsTextCancel
+        //   })
+        // })
       },
       // 点击页码
       listenPage (p) {
-        this.getWorkerState1(p, 10)
+        this.getWorkerState(p, 10)
         // 翻页时，记录翻到了第几页
         this.$set(this.pageInfo, 'currentPage', p)
         // localStorage.setItem('currentPage', p)

@@ -8,9 +8,12 @@
     
     <div class="title-oprate pb14 bor-btm-ec">
       <span class="font14 col9">
-        <router-link :to="{ path: '/lnav-1' }" class="back-icon">
+        <!-- <router-link :to="{ path: '/lnav-1' }" class="back-icon">
           <img src="../assets/images/backIcon.png">
-        </router-link>
+        </router-link> -->
+        <a href="javascript:;" class="back-icon" @click="changeBack">
+          <img src="../assets/images/backIcon.png">
+        </a>
         添加/修改服务商信息
       </span>
     </div>
@@ -33,7 +36,11 @@
     
     <el-form-item label="公司LOGO：" required prop="logo_file">
       <el-row>
-         <el-upload
+        <!-- <div class="imgWrap">
+          <img class="imgback" v-show="logoShow" :src="formInline.logo" />
+        </div> -->
+         <el-upload style="display:inline-block;"
+           v-show="btnShow"
           action="#"
           list-type="picture-card"
           :file-list="fileList"
@@ -41,7 +48,7 @@
           :on-success="uploadSuccess_logo"
           :before-upload="beforeUpload_logo">
           <el-button>点击上传公司LOGO</el-button>
-        </el-upload> 
+        </el-upload>
       </el-row>
     </el-form-item>
 
@@ -116,7 +123,21 @@
 
     <el-form-item label="营业执照：" prop="licenseList">
       <el-row>
-        <el-upload
+        <!-- <div class="imgWrap">
+          <img class="imgback" v-show="licenseShow" v-for="item in formInline.licenseList" :key="item" :src="item" />
+          <img class="imgCloseBtn" @click="removeImg" src="../assets/images/close-userpic.png">
+        </div> -->
+        <ul v-show="licenseShow" class="el-upload-list el-upload-list--picture-card">
+          <li class="el-upload-list__item is-success" v-for="item in formInline.licenseList">
+            <img :key="item" :src="item" class="el-upload-list__item-thumbnail">
+            <a class="el-upload-list__item-name"><i class="el-icon-document"></i>img2</a>
+            <label class="el-upload-list__item-status-label"><i class="el-icon-upload-success el-icon-check"></i></label>
+            <i class="el-icon-close"></i>
+            <!----><span class="el-upload-list__item-actions"><!---->
+            <span class="el-upload-list__item-delete"><i class="el-icon-delete2"></i></span></span>
+          </li>
+        </ul>
+        <el-upload style="display:inline-block;position:absolute;"
           action="#"
           list-type="picture-card"
           :file-list="fileListl"
@@ -131,7 +152,21 @@
     <el-form-item label="合同附件：" prop="contractList">
       <el-row>
         <!-- <img :src="item" v-for="item in server.contractList"> -->
-        <el-upload
+        <!-- <div class="imgWrap">
+          <img class="imgback" v-show="licenseShow" v-for="item in formInline.contractList" :key="item" :src="item" />
+          <img class="imgCloseBtn" src="../assets/images/close-userpic.png">
+        </div> -->
+        <ul v-show="licenseShow" class="el-upload-list el-upload-list--picture-card">
+          <li class="el-upload-list__item is-success" v-for="item in formInline.contractList">
+            <img :key="item" :src="item" class="el-upload-list__item-thumbnail">
+            <a class="el-upload-list__item-name"><i class="el-icon-document"></i>img2</a>
+            <label class="el-upload-list__item-status-label"><i class="el-icon-upload-success el-icon-check"></i></label>
+            <i class="el-icon-close"></i>
+            <!----><span class="el-upload-list__item-actions"><!---->
+            <span class="el-upload-list__item-delete"><i class="el-icon-delete2"></i></span></span>
+          </li>
+        </ul>
+        <el-upload style="display:inline-block;position:absolute;"
           action="http://testapi.center.birdwork.cn/api/common/upload"
           list-type="picture-card"
           :file-list="fileListc"
@@ -210,6 +245,9 @@
       // }
       return {
         // disabled: true,
+        logoShow: false,
+        licenseShow: false,
+        btnShow: true,
         formInline: {
           companyName: '',
           companyNameShort: '',
@@ -284,7 +322,11 @@
       this.getScale()
       if (this.$route.params.type === 'edit') {
         this.$set(this.$data, 'formInline', JSON.parse(localStorage.getItem('serverStrings')))
+        console.log('logo ' + JSON.parse(localStorage.getItem('serverStrings')).logo)
         this.$set(this.formInline, 'scale', this.formInline.scale + '')
+        _this.logoShow = true
+        _this.licenseShow = true
+        _this.btnShow = false
         p.then(function() {
           _this.citys.forEach(item => {
             if (item.code === _this.formInline.provinceCode) {
@@ -324,22 +366,21 @@
                 'companyName': _this.formInline.companyName,
                 'companyNameShort': _this.formInline.companyNameShort,
                 'scale': _this.formInline.scale,
-                'cityCode': '010',
+                'cityCode': _this.formInline.cityCode,
                 'addr': _this.formInline.addr,
                 'legalPerson': _this.formInline.legalPerson,
                 'description': _this.formInline.description,
-                'useRate': '12',
-                'taxRate': '12',
-                'logo': '22',
-                'licenseList': '11',
-                'contractList': '33'
+                'useRate': _this.formInline.useRate,
+                'taxRate': _this.formInline.taxRate,
+                'logo': _this.fileList[0].url,
+                'licenseList': _this.fileListl[0].url,
+                'contractList': _this.fileListc[0].url
               },
               method: 'post'
             }).then(function (response) {
               console.log(response)
               if (response.data.code === 0) {
                 localStorage.setItem('serverString', JSON.stringify(_this.formInline))
-
                 _this.$router.push('/servermanagemodifytwo/'+_this.$route.params.type+'/'+_this.$route.params.id)
               } else {
                 _this.$message.error(response.data.message)
@@ -352,6 +393,14 @@
             this.$message.error('表单验证失败!')
           }
         })
+      },
+      changeBack () {
+        let _this = this
+        if (this.$route.params.type === 'edit') {
+          _this.$router.push('/servermanagedetails?id=' + _this.$route.params.id)
+        } else {
+          _this.$router.push('/lnav-1')
+        }
       },
       getCities () {
         let _this = this
@@ -500,6 +549,18 @@
   .city .el-input {width: 200px;}
   .modify .el-textarea__inner {width: 100%;resize: none;}
   .el-textarea {resize: none;}
+  .imgWrap {
+    width: 200px;
+    height: 200px;
+    margin-right: 10px;
+    position: relative;
+    display: inline-block;
+  }
+  .imgCloseBtn {
+    position: absolute;
+    right: -8px;
+    top: -9px;
+  }
   .next-btn {font-size: 18px;width: 320px;height: 50px;color: #fff;background-color: #4794fe;border-radius: 4px;border-top-style: none;border-right-style: none;border-bottom-style: none;border-left-style: none;}
   .el-upload--picture-card {
     background-color: #fff; 

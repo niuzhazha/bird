@@ -11,40 +11,39 @@
           stripe
           style="width: 100%;border: 0;color: #666;">
           <el-table-column
-            fixed
             prop="id"
             label="ID"
-            width="70">
+            width="10%">
           </el-table-column>
           <el-table-column
             prop="user.name"
             label="姓名"
-            width="80">
+            width="16%">
           </el-table-column>
           <el-table-column
             prop="user.gender"
             label="性别"
-            width="95">
+            width="16%">
           </el-table-column>
           <el-table-column
             prop="user.birthday"
             label="出生日期"
-            width="180">
+            width="20%">
           </el-table-column>
           <el-table-column
             prop="student"
             label="是否学生"
-            width="95">
+            width="16%">
           </el-table-column>
           <el-table-column
             prop="certState"
             label="认证状态"
-            width="95">
+            width="16%">
           </el-table-column>
           <el-table-column
             prop="certNum"
             label="信用分"
-            width="140">
+            width="16%">
           </el-table-column>
           <!-- <template scope="scope">
             <el-button type="text" size="small">{{ scope.row.workerCreditDetail.commentNum }}</el-button>
@@ -53,7 +52,7 @@
           <el-table-column
             prop=""
             label="评价"
-            width="160">
+            width="16%">
             <template scope="scope">
               <el-button type="text" size="small">{{ scope.row.workerCreditDetail.commentNum }}</el-button>
               <el-button type="text" size="small">{{ scope.row.workerCreditDetail.commentAvg }}</el-button>
@@ -62,12 +61,12 @@
           <el-table-column
             prop="createTime"
             label="注册时间"
-            width="180">
+            width="20%">
           </el-table-column>
           <el-table-column
             prop="user.mobile"
             label="手机号"
-            width="180">
+            width="20%">
           </el-table-column>
         </el-table>
       </div>
@@ -148,6 +147,7 @@
     border: 0;
   }
   /*.th {color: #999;}*/
+  .el-table__header,.el-table__body {width: 100%!important;}
   .el-button {font-size: 14px;/*color: #4399ff;*/}
   .main-content {
     background-color: #FFF;

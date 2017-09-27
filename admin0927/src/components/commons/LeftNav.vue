@@ -52,7 +52,7 @@ export default {
     let _this = this
     let menuApi = '/api/menu'
     this.$http.get(menuApi).then(function (response) {
-      console.log(response)
+      // console.log(response)
       if (response.data.code === 0) {
         _this.$set(_this.$data, 'menus', response.data.data)
       }

@@ -13,7 +13,7 @@
       {{ form.companyNameShort }}
     </el-form-item>
     <el-form-item label="公司logo：">
-      {{ form.logo }}
+      <img :src="form.logo" style="width:200px;height:200px;" />
     </el-form-item>
     <el-form-item label="公司规模：">
       {{ form.scale }}
@@ -28,13 +28,13 @@
       {{ form.legalPerson }}
     </el-form-item>
     <el-form-item label="公司简介：">
-      {{ form.description }}
+      <img :src="form.description" />
     </el-form-item>
     <el-form-item label="营业执照：">
-      {{ form.licenseList }}
+    <img v-for="item in form.licenseList" :key="item" :src="item" style="width:200px;height:200px;" />
     </el-form-item>
     <el-form-item label="合同附件：" prop="">
-      <a class="download" href="#">点击下载</a>
+      <a class="download" @click="download">点击下载</a>
     </el-form-item>
     <div class="rate">
       <div class="server-count font14 col9">费用信息</div>
@@ -81,13 +81,17 @@
         _this.$set(_this.$data, 'form', response.data)
         // if (response.data.code === 0) {
           // console.log(_this.form)
-          console.log(111)
           localStorage.setItem('serverStrings', JSON.stringify(response.data))
           // console.log(response)
         // }
       }).catch(function (error) {
         console.log(error)
       })
+    },
+    methods: {
+      download () {
+        window.open("https://codeload.github.com/douban/douban-client/legacy.zip/master")
+      }
     }
     // page () {
       // localStorage.getItem('currentPage')
@@ -120,6 +124,7 @@
     padding: 0!important;
     border-radius: 0;
   }
+  .download {color: #20a0ff;}
   .city .el-input__inner {width: 190px;}
   .city .el-input:first-child .el-input__inner {margin-right: 20px;}
   .city .el-input {width: 200px;}

@@ -1,14 +1,14 @@
 <template>
   <el-form 
     class="modify2" 
-    ref="form" 
     :model="formInline" 
     :rules="ruleInline"
+    ref="formInline"
     label-width="105px" 
     style="background:#fff;padding: 20px;">
     <div class="title-oprate pb14 bor-btm-ec">
       <span class="font14 col9">
-      <router-link class="back-icon" :to="{ name: 'ServerManageModify', params: { type: 'goback', id: 0 } }">
+      <router-link class="back-icon" :to="{ name: 'ServerManageModify', params: { type: 'goback', id: this.$route.params.id } }">
         <img src="../assets/images/backIcon.png">
       </router-link>
       添加/修改服务商信息</span>
@@ -39,9 +39,47 @@
     <el-form-item label="系统权限：" prop="oldpass">
       <el-row>
         <el-col :span="24">
-          <el-checkbox v-model="privilege.home.selectAll">首页</el-checkbox>
+          <el-checkbox disabled v-model="privilege.home.selectAll">首页</el-checkbox>
         </el-col>
       </el-row>
+
+      <!-- <template v-for="tree in trees">
+        <el-row v-if="typeof(tree.children) === 'undefined'">
+          <el-col :span="24">
+            <el-checkbox>{{tree.name}}</el-checkbox>
+          </el-col>
+        </el-row>
+      </template> -->
+      <!-- <template>
+        <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
+          <el-checkbox>city</el-checkbox>
+          <el-checkbox>city</el-checkbox>
+          <el-checkbox>city</el-checkbox>
+          <el-checkbox>city</el-checkbox>
+        </el-checkbox-group>
+      </template>
+      <template>
+        <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
+          <el-checkbox>city2</el-checkbox>
+          <el-checkbox>city2</el-checkbox>
+          <el-checkbox>city2</el-checkbox>
+          <template>
+          <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
+            <el-checkbox>city3</el-checkbox>
+            <el-checkbox>city3</el-checkbox>
+            <el-checkbox>city3</el-checkbox>
+            <el-checkbox>city3</el-checkbox>
+          </el-checkbox-group>
+        </template>
+        </el-checkbox-group> -->
+      </template>
+      <template>
+        <el-row>
+          <el-col :span="24">
+            <el-checkbox>财务管理</el-checkbox>
+          </el-col>
+        </el-row>
+      </template>
 
       <el-row>
         <el-col :span="24">
@@ -129,6 +167,7 @@
   export default {
     data () {
       return {
+        trees: [],
         formInline: {
           openUser: {
             name: '',
@@ -137,7 +176,7 @@
         },
         privilege: {
           home: {
-            selectAll: false
+            selectAll: true
           },
           financial: {
             selectAll: false,
@@ -180,24 +219,27 @@
         }
       }
     },
-    mouted () {
+    mounted () {
       this.formInline = JSON.parse(localStorage.getItem('serverString'))
-      console.log(this.formInline)
+      // console.log(this.formInline)
+      this.getTrees ()
     },
     methods: {
       onSubmit (name) {
         // this.$refs[name].validate((valid) => {
           // if (valid) {
         let _this = this
-        // console.log(valid)
+        console.log(_this.formInline)
+        console.log(_this.privilege)
         let addApi = '/api/provider/addOpenUser'
         this.$http({
           url: addApi,
           params: {
             'name': _this.formInline.openUser.name,
             'mobile': _this.formInline.openUser.mobile,
-            'authIds': '1',
-            'providerId': '37'
+            // 'authIds': '1,2',
+            'authIds': _this.privilege.oldpass,
+            'providerId': _this.$route.params.id
           },
           method: 'post'
         }).then(function (response) {
@@ -211,6 +253,19 @@
         }).catch(function (error) {
           console.log(error)
           _this.$message.error(error.data.message)
+        })
+      },
+      getTrees () {
+        let _this = this
+        let treeApi = '/api/provider/getAuthsList'
+        this.$http.get(treeApi).then(function (response) {
+          // console.log(response.data.data.children)
+          if (response.data.code === 0) {
+            _this.$set(_this.$data, 'trees', response.data.data.children)
+            console.log(trees)
+          }
+        }).catch(function (error) {
+          console.log(error)
         })
       },
       // 系统权限功能
