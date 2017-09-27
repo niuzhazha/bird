@@ -14,14 +14,14 @@
       添加/修改服务商信息</span>
     </div>
     <div class="server-count font14 col9">系统账号与权限</div>
-    <el-form-item label="管理员：" prop="openUser.name">
+    <el-form-item label="管理员：" prop="name">
       <el-row>
         <el-col :span="10">
           <el-input v-model="formInline.openUser.name" placeholder="请输入管理员名字"></el-input>
         </el-col>
       </el-row>
     </el-form-item>
-    <el-form-item label="联系方式：" prop="openUser.mobile">
+    <el-form-item label="联系方式：" prop="mobile">
       <el-row>
         <el-col :span="10">
           <el-input v-model="formInline.openUser.mobile" placeholder="请输入联系方式"></el-input>
@@ -42,45 +42,45 @@
           <el-checkbox disabled v-model="privilege.home.selectAll">首页</el-checkbox>
         </el-col>
       </el-row>
-
-      <!-- <template v-for="tree in trees">
-        <el-row v-if="typeof(tree.children) === 'undefined'">
+      
+      <!-- 一级 -->
+      <template v-for="tree in trees">
+        <el-row>
           <el-col :span="24">
             <el-checkbox>{{tree.name}}</el-checkbox>
           </el-col>
         </el-row>
-      </template> -->
-      <!-- <template>
-        <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-          <el-checkbox>city</el-checkbox>
-          <el-checkbox>city</el-checkbox>
-          <el-checkbox>city</el-checkbox>
-          <el-checkbox>city</el-checkbox>
-        </el-checkbox-group>
-      </template>
-      <template>
-        <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-          <el-checkbox>city2</el-checkbox>
-          <el-checkbox>city2</el-checkbox>
-          <el-checkbox>city2</el-checkbox>
-          <template>
+
+        <!-- 二级 -->
+        <template
+          v-if="tree.children && tree.children.length>0"
+          v-for="subtree in tree.children">
+          <el-row>
+            <el-col :span="24" :offset="1">
+              <el-checkbox>{{subtree.name}}</el-checkbox>
+            </el-col>
+          </el-row>
+
+          <!-- 三级 -->
           <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-            <el-checkbox>city3</el-checkbox>
-            <el-checkbox>city3</el-checkbox>
-            <el-checkbox>city3</el-checkbox>
-            <el-checkbox>city3</el-checkbox>
+            <el-row>
+                <el-col :span="2" :offset="index === 0 ? 2 : 1"
+                  v-if="subtree.children && subtree.children.length>0"
+                  v-for="(thrtree, index) in subtree.children"
+                  :key="thrtree.id">
+                  <el-checkbox>{{thrtree.name}}</el-checkbox>
+                </el-col>
+            </el-row>
           </el-checkbox-group>
         </template>
-        </el-checkbox-group> -->
-      </template>
-      <template>
-        <el-row>
-          <el-col :span="24">
-            <el-checkbox>财务管理</el-checkbox>
-          </el-col>
-        </el-row>
       </template>
 
+
+      <!-- <el-row>
+        <el-col :span="24">
+          <el-checkbox disabled v-model="privilege.home.selectAll">首页</el-checkbox>
+        </el-col>
+      </el-row>
       <el-row>
         <el-col :span="24">
           <el-checkbox v-model="privilege.financial.selectAll"
@@ -156,7 +156,7 @@
           <el-checkbox v-model="privilege.manager.selectAll"
             @change="toggleCheck('manager', privilege.manager.selectAll)">领队管理</el-checkbox>
         </el-col>
-      </el-row>
+      </el-row> -->
     </el-form-item>
     <el-form-item class="submit-item tc">
       <el-button class="next-btn" type="primary" @click="onSubmit('form')">确定</el-button>
@@ -210,19 +210,23 @@
           }
         },
         ruleInline: {
-          openUser: [
-            { required: true, message: '请输入管理员' }
+          name: [
+            { required: true, message: '请输入管理员', trigger: 'blur' }
           ],
           mobile: [
-            { required: true, message: '请输入联系方式' }
+            { required: true, message: '请输入联系方式', trigger: 'blur' }
           ]
         }
       }
     },
     mounted () {
       this.formInline = JSON.parse(localStorage.getItem('serverString'))
+      this.formInline.openUser = this.formInline.openUser === null ? {
+        name: '',
+        mobile: ''
+      } : this.formInline.openUser
       // console.log(this.formInline)
-      this.getTrees ()
+      this.getTrees()
     },
     methods: {
       onSubmit (name) {
@@ -262,7 +266,7 @@
           // console.log(response.data.data.children)
           if (response.data.code === 0) {
             _this.$set(_this.$data, 'trees', response.data.data.children)
-            console.log(trees)
+            console.log(_this.trees)
           }
         }).catch(function (error) {
           console.log(error)
