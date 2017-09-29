@@ -121,15 +121,15 @@
         <ul class="bill-item">
             <li>
               <span class="item-left">申请时间：</span>
-              <span class="item-right">{{ billVisible.createTime }}</span>
+              <span class="item-right">{{ billVisible.data.createTime }}</span>
             </li>
             <li>
               <span class="item-left">开票金额：</span>
-              <span class="item-right">{{ (billVisible.amount/100).toFixed(2) }}</span>
+              <span class="item-right">{{ (billVisible.data.amount/100).toFixed(2) }}</span>
             </li>
             <li>
               <span class="item-left">税费：</span>
-              <span class="item-right">{{ billVisible.taxAmount }}</span>
+              <span class="item-right">{{ billVisible.data.taxAmount }}</span>
             </li>
         </ul>
         <!-- <ul class="bill-item">
@@ -206,7 +206,8 @@
           amount: '',
           taxAmount: '',
           extra: [],
-          info: []
+          info: [],
+          data: {}
         }
       }
     },
@@ -286,15 +287,15 @@
       },
       showBillDialog (scope) {
         let _this = this
-        // console.log(typeof(scope.row.id))
+        // console.log(1, typeof(scope.row.id))
         let billDetailApi = '/api/openBill/getBillById?id=' + scope.row.id
         _this.$http.get(billDetailApi).then((response) => {
           _this.$set(_this.billVisible, 'toggle', true)
-          console.log(2,response.data.data)
-          console.log(3, _this.$data)
+          // console.log(2,response.data.data)
+          // console.log(3, _this.$data)
         //   this.$set(this.bigImg, 'up', pic1)
         // this.$set(this.bigImg, 'down', pic2)
-          _this.$set(_this.$data, 'billVisible', response.data.data)
+          _this.$set(_this.billVisible, 'data', response.data.data)
           console.log(1,_this.billVisible)
         }).catch((err) => {
           console.log(err)
