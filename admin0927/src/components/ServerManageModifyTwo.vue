@@ -62,7 +62,8 @@
           </el-row>
 
           <!-- 三级 -->
-          <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
+          <el-checkbox-group>
+            <!--   v-model="checkedCities" @change="handleCheckedCitiesChange" -->
             <el-row>
                 <el-col :span="2" :offset="index === 0 ? 2 : 1"
                   v-if="subtree.children && subtree.children.length>0"
